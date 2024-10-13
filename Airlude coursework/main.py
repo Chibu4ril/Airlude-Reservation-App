@@ -12,3 +12,12 @@
 #
 # root.mainloop()
 
+class BookTicket:
+    def __init__(self):
+        print('Here we start')
+
+    def create(self, fname):
+        print('new')
+        return
+
+createTicket = BookTicket.create(fname='')
