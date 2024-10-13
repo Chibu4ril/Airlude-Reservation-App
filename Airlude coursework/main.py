@@ -1,16 +1,13 @@
-# This is a sample Python script.
+from tkinter import *
+from tkinter import ttk
 
-# Press ⌃R to execute it or replace it with your code.
-# Press Double ⇧ to search everywhere for classes, files, tool windows, actions, and settings.
+root = Tk()
+frame = ttk.Frame(root, padding=10)
 
+frame.grid()
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press ⌘F8 to toggle the breakpoint.
+ttk.Label(frame, text="Hello World!").grid(column=0, row=0)
 
+ttk.Button(frame, text="Quit", command=root.destroy).grid(column=0, row=1)
 
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+root.mainloop()
