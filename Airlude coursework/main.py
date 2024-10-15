@@ -11,13 +11,15 @@
 # ttk.Button(frame, text="Quit", command=root.destroy).grid(column=0, row=1)
 #
 # root.mainloop()
-
-class BookTicket:
-    def __init__(self):
-        print('Here we start')
-
-    def create(self, fname):
-        print('new')
-        return
-
-createTicket = BookTicket.create(fname='')
+#
+# # class BookTicket:
+# #     def __init__(self):
+# #         self.print('Here we start')
+# #
+# #     def create(self, fname):
+# #         self.print('new')
+# #         return
+# #
+# # createTicket = BookTicket.create()
+# #
+#
