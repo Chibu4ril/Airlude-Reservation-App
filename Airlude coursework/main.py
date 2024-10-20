@@ -23,3 +23,18 @@
 # # createTicket = BookTicket.create()
 # #
 #
+num = range(0,100)
+leftWindow = []
+rightWindow = []
+for i in num:
+    if i % 3 == 0:
+        leftWindow.append(i)
+        # perform action for left window
+
+        rightWindow.append(i + 2)
+        # perform action for left window
+
+
+print(leftWindow)
+print(rightWindow)
+
