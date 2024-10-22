@@ -6,12 +6,13 @@ def customer_id():
     customerId = []
 
 
-    while count <= 4:
+    while count <= 3:
         for i in c_id_range:
-            random_range = random.randrange(10)
+            random_range = random.randrange(5)
             customerId.append(i + random_range)
         break
-    return customerId
+    uniq = ''.join(str(item) for item in customerId )
+    return uniq
 
 print(customer_id())
 
