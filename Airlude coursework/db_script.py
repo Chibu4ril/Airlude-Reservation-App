@@ -15,9 +15,10 @@ class Database:
         with open('flight_db.csv', mode='r') as customer_itinerary:
             itinerary_rows = csv.reader(customer_itinerary, delimiter=',')
             for rows in itinerary_rows:
+                print(rows)
                 return rows
-                # print(rows)
 
-# DB = Database()
+
+DB = Database()
 #
-# DB.read_file()
+DB.read_file()
