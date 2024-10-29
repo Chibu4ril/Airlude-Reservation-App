@@ -1,10 +1,12 @@
 import csv
+import sys
+
+from welcome import *
 # from
 class Database:
     def __init__(self):
         # print('Welcome')
         pass
-
 
     def write_file(self):
         with open('flight_db.csv', mode='w') as customer_itinerary:
@@ -15,10 +17,8 @@ class Database:
         with open('flight_db.csv', mode='r') as customer_itinerary:
             itinerary_rows = csv.reader(customer_itinerary, delimiter=',')
             for rows in itinerary_rows:
-                print(rows)
+                # print(rows)
                 return rows
 
 
-DB = Database()
-#
-DB.read_file()
+
