@@ -11,7 +11,7 @@ class Database:
     def write_file(self):
         with open('flight_db.csv', mode='w') as customer_itinerary:
             itinerary_rows = csv.writer(customer_itinerary, delimiter=',', quoting=csv.QUOTE_MINIMAL, quotechar='"')
-            itinerary_rows.writerow([2, 'Innocent', '2399505', '123', 'active', 'economy', 'Window Seat'])
+            itinerary_rows.writerow([2, 'mARK', '2399505', '123', 'active', 'economy', 'Window Seat'])
 
     def read_file(self):
         with open('flight_db.csv', mode='r') as customer_itinerary:
@@ -22,3 +22,10 @@ class Database:
 
 
 
+
+#
+DB = Database()
+
+DB.write_file()
+
+print(DB.read_file())

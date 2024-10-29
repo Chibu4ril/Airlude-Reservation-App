@@ -30,9 +30,9 @@ def start_booking():
         ticket_type = 'Business Class'
 
     full_name = first_name + ' ' + last_name
-    
 
-    booking_details =
+
+    booking_details = []
 
     return booking_details
 
