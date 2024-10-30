@@ -1,8 +1,7 @@
 import csv
 import sys
 
-from welcome import *
-# from
+
 class Database:
     def __init__(self):
         # print('Welcome')
@@ -23,9 +22,9 @@ class Database:
 
 
 
+# #
+# DB = Database()
 #
-DB = Database()
-
-DB.write_file()
-
-print(DB.read_file())
+# DB.write_file()
+#
+# print(DB.read_file())
