@@ -7,4 +7,5 @@ def ticketCounter():
     global bookedTickets
 
     while totalTickets <= 100:
+        pass
         
