@@ -1,85 +1,51 @@
 
 import sys
 
-from db_script import Database
 
-class Main:
-    pass
+total_seats = 100
+booked_seat = 0
+
+
+def selection():
+    if len(menuItems) <= menuList():
+        print('Yes')
+
+
+
+
+
+def menuList():
+    global menuItems
+    menuItems = ['✈ 1 - Book a Reservation', '✈ 2 - Cancel My Reservation ', '✈ 3 - Modify My Reservation', '✈ 4 - View My Reservation Details', '✈ 5 - Exit']
+    print(f'{menuItems[0]} \n{menuItems[1]} \n{menuItems[2]} \n{menuItems[3]} \n{menuItems[4]}')
+    print ('')
+    user_request = int(input('Make a selection from 1-5: '))
+    if user_request <= len(menuItems):
+        
 
 def main():
-# Welcome header section
+    # Welcome header section
     print('                  ')
     print('===========================================================')
     print('    Welcome to Airlude Airline Ticket Reservation System  ')
     print('       You are a ticket away from your destination!!!        ')
-    print('       ============================================        ')
+    print('       ✈️============================================✈️        ')
     print('                  ')
-# End of header section
+    # End of header section
 
+    print(f'Total Seats Available: {total_seats}')
+    print(f'Total Seats Booked: {booked_seat}')
+    print(' ')
 
     print('What would you want to do today?')
-    print(' ')
     menuList()
 
 
-    print('Book a Ticket?')
-    booking_request = input('Type Yes or No: ')
 
-    def start_booking():
-        print('                  ')
-        print('Welcome to the ticket booking process!')
-        first_name = input('Enter First Name: ')
-        last_name = input('Enter Last Name: ')
-        ticket_type = int(input('Ticket Class (Press 0 for \"Economy\" or 1 for \"Business\"): '))
-        if ticket_type  == 0:
-            ticket_type = 'Economy'
-        else:
-            ticket_type = 'Business Class'
-
-        full_name = first_name + ' ' + last_name
-
-
-        booking_details = []
-
-        return booking_details
-
-    try:
-        if booking_request == 'Yes':
-            print('                  ')
-            print(start_booking())
-
-        elif booking_request == 'No':
-            print('                  ')
-            print('Confirm my Reservation?')
-            booking_Id = input('Enter your Ticket Number/Booking Id: ')
-
-    except Exception:
-        pass
-
-
-
-
-    def menuList():
-        menuItems = {
-
-        }
-    #
-    # DB = Database()
-    #
-    # print(DB.read_file())
 
     # ========================= footer sections =======================
     print(' ')
-    print(' ')
-
-    print('========================= © 2024 All Rights Reserved. Airlude')
-
-    print(' ')
-    print(' ')
-
-
-
-
+    print('------------------------> © 2024 All Rights Reserved. Airlude <------------------------------')
 
 
 # ========================= Initializer ==================
