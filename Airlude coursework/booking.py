@@ -1,14 +1,13 @@
-first_name = input('Enter First Name: ')
-last_name = input('Enter Last Name: ')
-ticket_type = int(input('Ticket Class (Press 0 for \"Economy\" or 1 for \"Business\"): '))
-
-
 import random
 
 class CustomerBookingID:
     def __init__(self):
         self.count = 0
         self.booking_digit_count = 0
+        # self.first_name = input('Enter First Name: ')
+        # self.last_name = input('Enter Last Name: ')
+        # self.ticket_type = int(input('Ticket Class (Press 0 for \"Economy\" or 1 for \"Business\"): '))
+        self.ticket_number = self.customer_id() + '-' + self.booking_id()
 
     def customer_id(self):
         c_id_range = range(0, 3)
@@ -32,47 +31,53 @@ class CustomerBookingID:
         random_booking_gen = ''.join(str(item) for item in bookingId)
         return random_booking_gen
 
-ticketID = CustomerBookingID()
+    # ticketID = CustomerBookingID()
 
-ticket_number = ticketID.customer_id() + '-' + ticketID.booking_id()
-
-
-def bookingDetails():
-    userName = f'{first_name} {last_name}'
-    bookingItem = [userName, ticket_number,  ticket_type, ]
-    return bookingItem
+    def book_seat(self):
+        print('booked!')
 
 
-print(bookingDetails())
 
 
-def start_booking():
-    print('                  ')
-    print('Welcome to the ticket booking process!')
-    first_name = input('Enter First Name: ')
-    last_name = input('Enter Last Name: ')
-    ticket_type = int(input('Ticket Class (Press 0 for \"Economy\" or 1 for \"Business\"): '))
-    if ticket_type == 0:
-        ticket_type = 'Economy'
-    else:
-        ticket_type = 'Business Class'
+# def bookingDetails():
+#     userName = f'{first_name} {last_name}'
+#     bookingItem = [userName, ticket_number,  ticket_type, ]
+#     return bookingItem
+#
+#
+# print(bookingDetails())
+#
+#
+# def start_booking():
+#     print('                  ')
+#     print('Welcome to the ticket booking process!')
+#     first_name = input('Enter First Name: ')
+#     last_name = input('Enter Last Name: ')
+#     ticket_type = int(input('Ticket Class (Press 0 for \"Economy\" or 1 for \"Business\"): '))
+#     if ticket_type == 0:
+#         ticket_type = 'Economy'
+#     else:
+#         ticket_type = 'Business Class'
+#
+#     full_name = first_name + ' ' + last_name
+#
+#     booking_details = []
+#
+#     return booking_details
+#
+#
+# try:
+#     if booking_request == 'Yes':
+#         print('                  ')
+#         print(start_booking())
+#
+#     elif booking_request == 'No':
+#         print('                  ')
+#         print('Confirm my Reservation?')
+#         booking_Id = input('Enter your Ticket Number/Booking Id: ')
+#
+# except Exception:
+#     pass
 
-    full_name = first_name + ' ' + last_name
-
-    booking_details = []
-
-    return booking_details
-
-
-try:
-    if booking_request == 'Yes':
-        print('                  ')
-        print(start_booking())
-
-    elif booking_request == 'No':
-        print('                  ')
-        print('Confirm my Reservation?')
-        booking_Id = input('Enter your Ticket Number/Booking Id: ')
-
-except Exception:
-    pass
+if __name__ == "__main__":
+    print('This is the booking file.')
