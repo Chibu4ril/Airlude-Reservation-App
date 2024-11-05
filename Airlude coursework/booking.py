@@ -40,7 +40,6 @@ class CustomerBookingID:
 
 # custermer id
 # fullname
-# phone number
 # ticketId
 # time created
 # status

@@ -1,11 +1,13 @@
 import csv
 import os
 import random
+import time
 
 class Database:
     def __init__(self):
         # print('Welcome')
         self.my_csv_file = 'flight_db.csv'
+        self.customer_details = CustomerBookingID()
 
     # Defining my csv file for i/o
 
@@ -57,8 +59,13 @@ class CustomerBookingID:
     def book_seat(self):
         fname = input('First Name: ')
         lname = input('Last Name: ')
+        fullname = fname + ' ' + lname
+        customer_id = self.customer_id()
+        ticket_id = self.ticket_number
 
-        print(fname + ' ' + lname + ' ' + self.ticket_number)
+
+
+        print( + )
 
 # #
 # DB = Database()
