@@ -4,9 +4,6 @@ class CustomerBookingID:
     def __init__(self):
         self.count = 0
         self.booking_digit_count = 0
-        # self.first_name = input('Enter First Name: ')
-        # self.last_name = input('Enter Last Name: ')
-        # self.ticket_type = int(input('Ticket Class (Press 0 for \"Economy\" or 1 for \"Business\"): '))
         self.ticket_number = self.customer_id() + '-' + self.booking_id()
 
     def customer_id(self):
@@ -34,8 +31,22 @@ class CustomerBookingID:
     # ticketID = CustomerBookingID()
 
     def book_seat(self):
-        print('booked!')
+        fname = input('First Name: ')
+        lname = input('Last Name: ')
 
+        print(fname + ' ' + lname + ' ' + self.ticket_number)
+
+
+
+# custermer id
+# fullname
+# phone number
+# ticketId
+# time created
+# status
+# seat number
+# seat class
+# time updated
 
 
 
