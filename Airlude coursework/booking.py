@@ -7,6 +7,7 @@ class CustomerBookingID:
         self.ticket_number = self.customer_id() + '-' + self.booking_id()
 
     def customer_id(self):
+        ###
         c_id_range = range(0, 3)
         customerId = []
         while self.count <= 3:
