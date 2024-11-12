@@ -1,4 +1,4 @@
-
+import os.path
 import sys
 import time
 from booking import CustomerBookingID
@@ -6,9 +6,12 @@ from booking import CustomerBookingID
 
 class Welcome:
     def __init__(self):
+        self.seats = 100
         self.total_seats = 100
         self.booked_seat = 0
         self.booker = CustomerBookingID()
+
+
 
     def selection_error(self):
         print('Wrong input!')
