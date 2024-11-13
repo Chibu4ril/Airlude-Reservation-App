@@ -2,14 +2,14 @@ import os.path
 import sys
 import time
 from booking import CustomerBookingID
+from db_script import Database
 
 
 class Welcome:
     def __init__(self):
-        self.seats = 100
         self.total_seats = 100
-        self.booked_seat = 0
         self.booker = CustomerBookingID()
+        self.db = Database()
 
 
 
@@ -27,30 +27,31 @@ class Welcome:
         print(f'{menu_items[0]} \n{menu_items[1]} \n{menu_items[2]} \n{menu_items[3]} \n{menu_items[4]}')
         print('')
         # print(f'{'-' * 30}')
-        user_request = int(input('Enter a selection from 1-5: '))
+        choice = input('Enter a selection from 1-5: ')
         # print(f'{'-' * 30}')
 
         try:
-            user_request <= len(menu_items)
+            choice <= len(menu_items)
         except NameError as error:
             # selection_error(error)
             print('Heelo')
         else:
-            if user_request == 1:
+            if choice == '1':
                 print(menu_items[0])
                 self.loader(["Processing"])
                 self.booker.book_seat()
                 # self.book_again()
-            elif user_request == 2:
+            elif choice == '2':
                 print(menu_items[1])
                 # cancel_reserve()
-            elif user_request == 3:
+            elif choice == '3':
                 print(menu_items[2])
                 # modify_reserve()
-            elif user_request == 4:
+            elif choice == '4':
                 print(menu_items[3])
                 # view_reserve()
-            elif user_request == 5:
+            elif choice == '5':
+
                 print(menu_items[4])
                 quit()
         finally:
@@ -71,7 +72,7 @@ class Welcome:
         # End of header section
 
         print(f'Total Seats Available: {self.total_seats}')
-        print(f'Total Seats Booked: {self.booked_seat}')
+        print(f'Total Seats Booked: {self.total_seats - self.db.db_record_checker() }')
         print(' ')
 
         print('What would you want to do today?')

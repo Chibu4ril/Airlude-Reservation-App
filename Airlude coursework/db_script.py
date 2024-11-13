@@ -6,16 +6,22 @@ import time
 class Database:
     def __init__(self):
         # print('Welcome')
-        self.records = []
         self.my_csv_file = 'flight_db.csv'
         self.customer_details = CustomerBookingID()
+
+
+
+    def db_record_checker(self):
+        records = []
         try:
             if not os.path.isfile(self.my_csv_file):
                 with open(self.my_csv_file, mode='r') as file:
                     db_reader = csv.DictReader(file)
-                    self.records = list(db_reader)
+                    records = list(db_reader)
         except FileNotFoundError:
             print('No record found, start booking.')
+        return records
+
 
     # Defining my csv file for i/o
 
