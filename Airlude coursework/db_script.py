@@ -9,9 +9,7 @@ class Database:
         self.my_csv_file = 'flight_db.csv'
         self.customer_details = CustomerBookingID()
 
-
-
-    def db_record_checker(self):
+    def csv_record_checker(self):
         records = []
         try:
             if not os.path.isfile(self.my_csv_file):
