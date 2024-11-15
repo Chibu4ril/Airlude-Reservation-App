@@ -53,22 +53,24 @@ class Ticketing:
         if len([ticket for ticket in self.all_tickets if ticket.status == 'active']) >= 100:
             print('All seats are booked!')
             return None
-        ticket_number = f'{self.customer_id()} - {self.booking_id()}'
+        ticket_number = f'{self.customer_id()}-{self.booking_id()}'
         customer_id = self.customer_id()
         seat_number = len([ticket for ticket in self.all_tickets if ticket.status == 'active']) + 1
         fullname = f'{input('Enter Your First Name: ').title()} {input('Enter Your Last Name: ').title()}'
-        booking_time = datetime.now().strftime('%H:%M:%S')
+        booking_time = datetime.now().strftime('%d-%m-%Y %H:%M:%S')
         status = 'active'
         ticket_type = 'Economy'
-        window_seat = [x for x in self.all_tickets if seat_number % 2 ==0]
+        window_seat =  str(seat_number % 2 ==0)
         my_ticket = self.config_ticket(customer_id, fullname, ticket_number, seat_number, booking_time, status, ticket_type, window_seat)
+        frontend_payload = my_ticket.prep_payload()
+        display_payload = f'\nName: {frontend_payload['fullname']} \nTicket Number: {frontend_payload['ticket_number']} \nSeat Number: {frontend_payload['seat_number']} \nWindow Seat: {frontend_payload['window_seat']}'
         self.all_tickets.append(my_ticket)
         with open(TICKETS_FILE, mode='w', newline='') as record:
             writer = csv.DictWriter(record, fieldnames=['customer_id', 'fullname', 'ticket_number', 'seat_number', 'booking_time', 'status', 'ticket_type', 'window_seat'])
             writer.writeheader()
             for ticket in self.all_tickets:
-                writer.writerow(my_ticket.prep_payload())
-        print(f'\nHello {fullname}! \nYour ticket with the following details has been booked successfully!: \n{my_ticket.prep_payload()}')
+                writer.writerow(ticket.prep_payload())
+        print(f'\nHello {list(fullname.split(' '))[0]}! \nYour flight ticket with the following details has been booked successfully!: \n{display_payload}')
         return my_ticket
 
 
