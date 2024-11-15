@@ -5,6 +5,7 @@ class Welcome:
         self.total_seats = 100
         self.create_ticket = Ticketing()
         # self.delete_ticket =
+        self.read_ticket = Ticketing()
 
     def menu(self):
         menu_items = ['1 - Book a Reservation', '2 - Modify a Reservation', '3 - Cancel a Reservation', '4 - View a Reservation Details', '5 - View Seat Mapping', '6 - Exit']
@@ -17,6 +18,11 @@ class Welcome:
             print(menu_items[0] + ' ' + '- SELECTED')
             print(' ')
             self.create_ticket.book_seat()
+        elif choice == 4:
+            print(menu_items[3] + ' ' + '- SELECTED \n')
+            self.read_ticket.read_tickets()
+
+
 
 
         else:

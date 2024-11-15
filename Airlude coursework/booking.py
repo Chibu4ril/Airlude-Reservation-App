@@ -73,4 +73,10 @@ class Ticketing:
         print(f'\nHello {list(fullname.split(' '))[0]}! \nYour flight ticket with the following details has been booked successfully!: \n{display_payload}')
         return my_ticket
 
+    def read_tickets(self):
+        booked_ticket_number = input('Enter Your Ticket Number: ')
+        for row in self.all_tickets:
+            if row.ticket_number == booked_ticket_number:
+                print(row.fullname)
+
 
