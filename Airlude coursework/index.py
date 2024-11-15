@@ -4,7 +4,7 @@ class Welcome:
     def __init__(self):
         self.total_seats = 100
         self.create_ticket = Ticketing()
-        # self.delete_ticket =
+        self.delete_ticket = Ticketing()
         self.read_ticket = Ticketing()
 
     def menu(self):
@@ -18,13 +18,12 @@ class Welcome:
             print(menu_items[0] + ' ' + '- SELECTED')
             print(' ')
             self.create_ticket.book_seat()
+        elif choice == 3:
+            print(menu_items[2] + ' ' + '- SELECTED \n')
+            self.delete_ticket.del_tickets()
         elif choice == 4:
             print(menu_items[3] + ' ' + '- SELECTED \n')
             self.read_ticket.read_tickets()
-
-
-
-
         else:
             print('You entered an invalid choice. \nPlease Try Again')
 

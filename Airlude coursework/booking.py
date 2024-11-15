@@ -77,6 +77,15 @@ class Ticketing:
         booked_ticket_number = input('Enter Your Ticket Number: ')
         for row in self.all_tickets:
             if row.ticket_number == booked_ticket_number:
-                print(row.fullname)
+                print(f'Name: {row.fullname} \nTicket Number: {row.ticket_number} \nSeat Number: {row.seat_number}\nTicket Status: {row.status}\nBooking Time: {row.booking_time} ')
+
+    def del_tickets(self):
+        booked_ticket_number = input('Enter Your Ticket Number: ')
+        for row in self.all_tickets:
+            if row.ticket_number == booked_ticket_number:
+                print(f'Are you Sure You Want to Cancel This Reservation?\nName: {row.fullname} \nTicket Number: {row.ticket_number} \nSeat Number: {row.seat_number}\nTicket Status: {row.status}\nBooking Time: {row.booking_time} ')
+                confirm_del = input('Type a YES or NO to proceed with reservation cancellation: ').strip().upper()
+                if confirm_del == 'YES':
+                    del row
 
 

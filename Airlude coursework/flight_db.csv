@@ -16,3 +16,4 @@ customer_id,fullname,ticket_number,seat_number,booking_time,status,ticket_type,w
 446,Iuky Look,132 - 02537,15,15-11-2024 14:25:16,active,Economy,False
 244,Pyhton  Loce,432 - 14257,16,15-11-2024 14:26:19,active,Economy,True
 036,Joyyu Kiloo,342-11337,17,15-11-2024 14:29:43,active,Economy,False
+,,,
