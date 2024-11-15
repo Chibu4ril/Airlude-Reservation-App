@@ -1,3 +1,5 @@
-2,mARK,2399505,123,active,economy,Window Seat
-
-
+customer_id,fullname,ticket_number,seat_number,booking_time,status,ticket_type,window_seat
+115,Kio Loo,135 - 03457,4,22:48:48,active,Economy,"[<ticketconfig.TicketConfig object at 0x000001B2C6332BA0>, <ticketconfig.TicketConfig object at 0x000001B2C64BC410>, <ticketconfig.TicketConfig object at 0x000001B2C64BC550>]"
+115,Kio Loo,135 - 03457,4,22:48:48,active,Economy,"[<ticketconfig.TicketConfig object at 0x000001B2C6332BA0>, <ticketconfig.TicketConfig object at 0x000001B2C64BC410>, <ticketconfig.TicketConfig object at 0x000001B2C64BC550>]"
+115,Kio Loo,135 - 03457,4,22:48:48,active,Economy,"[<ticketconfig.TicketConfig object at 0x000001B2C6332BA0>, <ticketconfig.TicketConfig object at 0x000001B2C64BC410>, <ticketconfig.TicketConfig object at 0x000001B2C64BC550>]"
+115,Kio Loo,135 - 03457,4,22:48:48,active,Economy,"[<ticketconfig.TicketConfig object at 0x000001B2C6332BA0>, <ticketconfig.TicketConfig object at 0x000001B2C64BC410>, <ticketconfig.TicketConfig object at 0x000001B2C64BC550>]"

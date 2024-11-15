@@ -56,8 +56,8 @@ class Ticketing:
         ticket_number = f'{self.customer_id()} - {self.booking_id()}'
         customer_id = self.customer_id()
         seat_number = len([ticket for ticket in self.all_tickets if ticket.status == 'active']) + 1
-        fullname = f'{input('Enter First Name: ').title()} {input('Enter Last Name: ').title()}'
-        booking_time = datetime.now().strftime('%H:%M:%S %d-%m-%Y')
+        fullname = f'{input('Enter Your First Name: ').title()} {input('Enter Your Last Name: ').title()}'
+        booking_time = datetime.now().strftime('%H:%M:%S')
         status = 'active'
         ticket_type = 'Economy'
         window_seat = [x for x in self.all_tickets if seat_number % 2 ==0]
@@ -68,7 +68,7 @@ class Ticketing:
             writer.writeheader()
             for ticket in self.all_tickets:
                 writer.writerow(my_ticket.prep_payload())
-        print(f'{fullname} your ticket with the following details has been booked successfully!: \n{my_ticket.prep_payload()}')
+        print(f'\nHello {fullname}! \nYour ticket with the following details has been booked successfully!: \n{my_ticket.prep_payload()}')
         return my_ticket
 
 
