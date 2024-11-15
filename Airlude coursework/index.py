@@ -3,12 +3,12 @@ from booking import Ticketing
 class Welcome:
     def __init__(self):
         self.total_seats = 100
-        self.process = Ticketing()
+        self.create_ticket = Ticketing()
+        # self.delete_ticket =
 
     def menu(self):
-        menu_items = ['1 - Book a Reservation', '2 - Cancel My Reservation ', '3 - Modify My Reservation',
-                      '4 - View My Reservation Details', '5 - Exit']
-        print(f'✈ {menu_items[0]} \n✈ {menu_items[1]} \n✈ {menu_items[2]} \n✈ {menu_items[3]} \n✈ {menu_items[4]}')
+        menu_items = ['1 - Book a Reservation', '2 - Modify a Reservation', '3 - Cancel a Reservation', '4 - View a Reservation Details', '5 - View Seat Mapping', '6 - Exit']
+        print(f'✈ {menu_items[0]} \n✈ {menu_items[1]} \n✈ {menu_items[2]} \n✈ {menu_items[3]} \n✈ {menu_items[4]} \n✈ {menu_items[5]}')
         print('')
 
         choice = int(input('Enter a selection from 1-5: '))
@@ -16,9 +16,11 @@ class Welcome:
         if choice  == 1:
             print(menu_items[0] + ' ' + '- SELECTED')
             print(' ')
-            self.process.book_seat()
+            self.create_ticket.book_seat()
+
+
         else:
-            print('You entered an invalid choice. \n Please Try Again')
+            print('You entered an invalid choice. \nPlease Try Again')
 
 
     def main(self):
