@@ -1,16 +1,8 @@
 customer_id,fullname,ticket_number,seat_number,booking_time,status,ticket_type,window_seat
-253,John Hoo,113 - 43664,5,15-11-2024 07:50:14,active,Economy,[]
-253,John Hoo,113 - 43664,5,15-11-2024 07:50:14,active,Economy,[]
-253,John Hoo,113 - 43664,5,15-11-2024 07:50:14,active,Economy,[]
-253,John Hoo,113 - 43664,5,15-11-2024 07:50:14,active,Economy,[]
-253,John Hoo,113 - 43664,5,15-11-2024 07:50:14,active,Economy,[]
-135,Makers Juu,456 - 12367,6,15-11-2024 07:55:25,active,Economy,"[<ticketconfig.TicketConfig object at 0x0000024C95C12900>, <ticketconfig.TicketConfig object at 0x0000024C95CA02D0>, <ticketconfig.TicketConfig object at 0x0000024C95CA0410>, <ticketconfig.TicketConfig object at 0x0000024C95B0D0F0>, <ticketconfig.TicketConfig object at 0x0000024C95B0D810>]"
-255,Jhyuuo Bers,456 - 43347,7,15-11-2024 07:57:20,active,Economy,False
-134,John  Mark,252 - 41254,8,15-11-2024 14:10:00,active,Economy,True
-255,HomeAlone,016 - 13454,9,15-11-2024 14:11:22,active,Economy,False
 444,Hall Kilo,156 - 35248,10,15-11-2024 14:13:03,active,Economy,True
 023,Juaas Hjkj,246 - 14235,11,15-11-2024 14:13:51,active,Economy,False
 442,Joui Sdeed,256 - 04334,12,15-11-2024 14:16:03,active,Economy,True
 352,Uiuuu Juhhe,012 - 23377,13,15-11-2024 14:20:43,active,Economy,False
 055,Johuua Looo,045 - 03344,14,15-11-2024 14:24:13,active,Economy,True
 ,,,,,,,
+055,Tyruuu Rees,445-15554,15,16-11-2024 15:04:44,active,Economy,False

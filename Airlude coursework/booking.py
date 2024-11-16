@@ -4,8 +4,8 @@ from datetime import datetime
 from ticketconfig import TicketConfig
 import random
 
-
 TICKETS_FILE = 'flight_db.csv'
+
 
 
 class Ticketing:
@@ -51,14 +51,14 @@ class Ticketing:
 
     def book_seat(self):
         if len([ticket for ticket in self.all_tickets if ticket.status == 'active']) >= 100:
-            print('All seats are booked!')
+            print('All seats are booked! \nNo more empty seats available!')
             return None
+        fullname = f'{input('Enter Your First Name: ').title()} {input('Enter Your Last Name: ').title()}'
         ticket_number = f'{self.customer_id()}-{self.booking_id()}'
         customer_id = self.customer_id()
         seat_number = len([ticket for ticket in self.all_tickets if ticket.status == 'active']) + 1
-        fullname = f'{input('Enter Your First Name: ').title()} {input('Enter Your Last Name: ').title()}'
         booking_time = datetime.now().strftime('%d-%m-%Y %H:%M:%S')
-        status = 'active'
+        status = 'active'.title()
         ticket_type = 'Economy'
         window_seat =  str(seat_number % 2 ==0)
         my_ticket = self.config_ticket(customer_id, fullname, ticket_number, seat_number, booking_time, status, ticket_type, window_seat)
@@ -99,6 +99,7 @@ class Ticketing:
                     return
             else:
                 print(f'No ticket found with this Ticket Number: {booked_ticket_number}')
+                break
 
 
     def edit_ticket(self):
