@@ -6,6 +6,7 @@ class Welcome:
         self.create_ticket = Ticketing()
         self.delete_ticket = Ticketing()
         self.read_ticket = Ticketing()
+        self.update_ticket = Ticketing()
 
     def menu(self):
         menu_items = ['1 - Book a Reservation', '2 - Modify a Reservation', '3 - Cancel a Reservation', '4 - View a Reservation Details', '5 - View Seat Mapping', '6 - Exit']
@@ -15,9 +16,11 @@ class Welcome:
         choice = int(input('Enter a selection from 1-5: '))
 
         if choice  == 1:
-            print(menu_items[0] + ' ' + '- SELECTED')
-            print(' ')
+            print(menu_items[0] + ' ' + '- SELECTED \n')
             self.create_ticket.book_seat()
+        elif choice == 2:
+            print(menu_items[1] + ' ' + '- SELECTED \n')
+            self.update_ticket.edit_ticket()
         elif choice == 3:
             print(menu_items[2] + ' ' + '- SELECTED \n')
             self.delete_ticket.del_tickets()

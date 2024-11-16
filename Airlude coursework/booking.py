@@ -86,6 +86,43 @@ class Ticketing:
                 print(f'Are you Sure You Want to Cancel This Reservation?\nName: {row.fullname} \nTicket Number: {row.ticket_number} \nSeat Number: {row.seat_number}\nTicket Status: {row.status}\nBooking Time: {row.booking_time} ')
                 confirm_del = input('Type a YES or NO to proceed with reservation cancellation: ').strip().upper()
                 if confirm_del == 'YES':
-                    del row
+                    self.all_tickets.remove(row)
+                    with open(TICKETS_FILE, mode='w', newline='') as record:
+                        writer = csv.DictWriter(record, fieldnames=['customer_id', 'fullname', 'ticket_number', 'seat_number', 'booking_time', 'status', 'ticket_type', 'window_seat'])
+                        writer.writeheader()
+                        for ticket in self.all_tickets:
+                            writer.writerow(ticket.prep_payload())
+                    print(f'Reservation for Ticket Number: {booked_ticket_number} has been cancelled!')
+                    return
+                else:
+                    print('Cancellation aborted.')
+                    return
+            else:
+                print(f'No ticket found with this Ticket Number: {booked_ticket_number}')
+
+
+    def edit_ticket(self):
+        booked_ticket_number = input('Enter Your Ticket Number: ')
+        for row in self.all_tickets:
+            if row.ticket_number == booked_ticket_number:
+                print(f'Current reservation details:\nName: {row.fullname} \nTicket Number: {row.ticket_number} \nSeat Number: {row.seat_number}\nTicket Status: {row.status}\nBooking Time: {row.booking_time} \n')
+                print('Enter new details or Press Enter to keep the current details.\n')
+                new_fullname = f'{input(f'Enter Your First Name[{list(row.fullname.split(' '))[0]}]: ').title().strip()} {input(f'Enter Your Last Name[{list(row.fullname.split(' '))[1]}]: ').title().strip()}' or row.fullname
+                row.fullname = new_fullname
+                with open(TICKETS_FILE, mode='w', newline='') as record:
+                    writer = csv.DictWriter(record, fieldnames=['customer_id', 'fullname', 'ticket_number', 'seat_number', 'booking_time', 'status', 'ticket_type', 'window_seat'])
+                    writer.writeheader()
+                    for ticket in self.all_tickets:
+                        writer.writerow(ticket.prep_payload())
+                print(f'Reservation for Ticket Number: {booked_ticket_number} has been updated!')
+                return
+            else:
+                print(f'No ticket found with this Ticket Number: {booked_ticket_number}')
+                break
+
+
+
+
+
 
 
