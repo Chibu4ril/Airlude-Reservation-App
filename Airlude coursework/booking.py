@@ -1,12 +1,9 @@
 import csv
 from datetime import datetime
-
 from ticketconfig import TicketConfig
 import random
 
 TICKETS_FILE = 'flight_db.csv'
-
-
 
 class Ticketing:
     def __init__(self):
