@@ -51,11 +51,26 @@ class Ticketing:
             for ticket in self.all_tickets:
                 writer.writerow(ticket.prep_payload())
 
+    def get_valid_name(self, prompt):
+        while True:
+            name = input(prompt).strip().title()
+            if len(name) < 3:
+                print("Name must have at least 3 characters. Please try again.")
+            elif any(char.isdigit() for char in name):
+                print("Name cannot contain numbers. Please try again.")
+            elif not name.isalpha():
+                print("Name cannot contain symbols or special characters. Please try again.")
+            else:
+                return name
+
     def book_seat(self):
         if len([ticket for ticket in self.all_tickets if ticket.status == 'Active']) >= 100:
             print('All seats are booked! \nNo more empty seats available!')
             return None
-        fullname = f'{input('Enter Your First Name: ').title()} {input('Enter Your Last Name: ').title()}'
+        first_name = self.get_valid_name("Enter Your First Name: ")
+        last_name = self.get_valid_name("Enter Your Last Name: ")
+        fullname = f"{first_name} {last_name}"
+
         ticket_number = f'{self.customer_id()}-{self.booking_id()}'
         customer_id = self.customer_id()
         seat_number = len([ticket for ticket in self.all_tickets if ticket.status == 'Active'])
@@ -99,25 +114,42 @@ class Ticketing:
 
         print(f'\nNo ticket found with this Ticket Number: {booked_ticket_number}')
 
-
     def edit_ticket(self):
-        booked_ticket_number = input('Enter Your Ticket Number: ')
+        booked_ticket_number = input('Enter Your Ticket Number: ').strip()
+        # Flag to check if the ticket is found
+        ticket_found = False
+
         for row in self.all_tickets:
             if row.ticket_number == booked_ticket_number:
-                print(f'Current reservation details:\nName: {row.fullname} \nTicket Number: {row.ticket_number} \nSeat Number: {row.seat_number}\nTicket Status: {row.status}\nBooking Time: {row.booking_time} \n')
+                ticket_found = True
+                print(f'Current reservation details:\n'
+                      f'Name: {row.fullname}\n'
+                      f'Ticket Number: {row.ticket_number}\n'
+                      f'Seat Number: {row.seat_number}\n'
+                      f'Ticket Status: {row.status}\n'
+                      f'Booking Time: {row.booking_time}\n')
                 print('Enter new details or Press Enter to keep the current details.\n')
-                new_fullname = f'{input(f'Enter Your First Name[{list(row.fullname.split(' '))[0]}]: ').title().strip()} {input(f'Enter Your Last Name[{list(row.fullname.split(' '))[1]}]: ').title().strip()}' or row.fullname
-                row.fullname = new_fullname
+
+                # Get new details from user or retain current details
+                new_first_name = input(f'Enter Your First Name [{row.fullname.split(" ")[0]}]: ').strip().title() or \
+                                 row.fullname.split(" ")[0]
+                new_last_name = input(f'Enter Your Last Name [{row.fullname.split(" ")[1]}]: ').strip().title() or \
+                                row.fullname.split(" ")[1]
+                row.fullname = f"{new_first_name} {new_last_name}"
+
+                # Update the tickets file
                 with open(TICKETS_FILE, mode='w', newline='') as record:
                     writer = csv.DictWriter(record, fieldnames=['customer_id', 'fullname', 'ticket_number', 'seat_number', 'booking_time', 'status', 'window_seat'])
                     writer.writeheader()
                     for ticket in self.all_tickets:
                         writer.writerow(ticket.prep_payload())
+
                 print(f'Reservation for Ticket Number: {booked_ticket_number} has been updated!')
-                return
-            else:
-                print(f'No ticket found with this Ticket Number: {booked_ticket_number}')
-                break
+                break  # Exit the loop after finding and updating the ticket
+
+        if not ticket_found:
+            print(f'No ticket found with Ticket Number: {booked_ticket_number}')
+
 
 
 

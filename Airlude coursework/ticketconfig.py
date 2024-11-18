@@ -1,4 +1,3 @@
-import random
 
 class TicketConfig:
     def __init__(self, customer_id, fullname, ticket_number, seat_number, booking_time, status, window_seat):
