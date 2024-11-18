@@ -47,6 +47,9 @@ class Welcome:
         else:
             print('You entered an invalid choice. \nPlease Try Again')
 
+        self.main()
+
+
 
     def main(self):
         print('\n===========================================================')
@@ -62,7 +65,7 @@ class Welcome:
         print(f'Total Seats Available: {self.total_seats - count_seats_available()}')
         print(f'Total Seats Booked: {count_seats_available()} \n')
 
-        print('What would you want to do today?')
+        print('What would you like to do today?')
         self.menu()
 
 

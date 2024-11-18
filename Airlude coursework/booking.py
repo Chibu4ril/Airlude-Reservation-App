@@ -22,11 +22,10 @@ class Ticketing:
 
     @classmethod
     def customer_id(cls):
-        c_id_range = range(0, 3)
         count = 0
         customerId = []
         while count <= 3:
-            for i in c_id_range:
+            for i in  range(0, 3):
                 random_range = random.randrange(5)
                 customerId.append(i + random_range)
             break
@@ -35,38 +34,42 @@ class Ticketing:
 
     @classmethod
     def booking_id(cls):
-        c_id_range = range(0, 5)
         bookingId = []
         booking_digit_count = 0
         while booking_digit_count <= 5:
-            for i in c_id_range:
+            for i in range(0, 5):
                 random_range = random.randrange(5)
                 bookingId.append(i + random_range)
             break
         random_booking_gen = ''.join(str(item) for item in bookingId)
         return random_booking_gen
 
+    def write_to_csv(self):
+        with open(TICKETS_FILE, mode='w', newline='') as record:
+            writer = csv.DictWriter(record, fieldnames=['customer_id', 'fullname', 'ticket_number', 'seat_number', 'booking_time', 'status', 'window_seat'])
+            writer.writeheader()
+            for ticket in self.all_tickets:
+                writer.writerow(ticket.prep_payload())
+
     def book_seat(self):
-        if len([ticket for ticket in self.all_tickets if ticket.status == 'active']) >= 100:
+        if len([ticket for ticket in self.all_tickets if ticket.status == 'Active']) >= 100:
             print('All seats are booked! \nNo more empty seats available!')
             return None
         fullname = f'{input('Enter Your First Name: ').title()} {input('Enter Your Last Name: ').title()}'
         ticket_number = f'{self.customer_id()}-{self.booking_id()}'
         customer_id = self.customer_id()
-        seat_number = len([ticket for ticket in self.all_tickets if ticket.status == 'active']) + 1
+        seat_number = len([ticket for ticket in self.all_tickets if ticket.status == 'Active'])
+        window_seat = str(seat_number % 2 == 0)
         booking_time = datetime.now().strftime('%d-%m-%Y %H:%M:%S')
-        status = 'active'.title()
-        ticket_type = 'Economy'
-        window_seat =  str(seat_number % 2 ==0)
-        my_ticket = self.config_ticket(customer_id, fullname, ticket_number, seat_number, booking_time, status, ticket_type, window_seat)
+        status = 'Active'.title()
+
+        my_ticket = self.config_ticket(customer_id, fullname, ticket_number, seat_number, booking_time, status, window_seat)
         frontend_payload = my_ticket.prep_payload()
         display_payload = f'\nName: {frontend_payload['fullname']} \nTicket Number: {frontend_payload['ticket_number']} \nSeat Number: {frontend_payload['seat_number']} \nWindow Seat: {frontend_payload['window_seat']}'
         self.all_tickets.append(my_ticket)
-        with open(TICKETS_FILE, mode='w', newline='') as record:
-            writer = csv.DictWriter(record, fieldnames=['customer_id', 'fullname', 'ticket_number', 'seat_number', 'booking_time', 'status', 'ticket_type', 'window_seat'])
-            writer.writeheader()
-            for ticket in self.all_tickets:
-                writer.writerow(ticket.prep_payload())
+
+        self.write_to_csv()
+
         print(f'\nHello {list(fullname.split(' '))[0]}! \nYour flight ticket with the following details has been booked successfully!: \n{display_payload}')
         return my_ticket
 
@@ -75,28 +78,26 @@ class Ticketing:
         for row in self.all_tickets:
             if row.ticket_number == booked_ticket_number:
                 print(f'Name: {row.fullname} \nTicket Number: {row.ticket_number} \nSeat Number: {row.seat_number}\nTicket Status: {row.status}\nBooking Time: {row.booking_time} ')
+                return
+        print(f'No ticket found with Ticket Number: {booked_ticket_number}')
 
     def del_tickets(self):
         booked_ticket_number = input('Enter Your Ticket Number: ')
         for row in self.all_tickets:
             if row.ticket_number == booked_ticket_number:
                 print(f'Are you Sure You Want to Cancel This Reservation?\nName: {row.fullname} \nTicket Number: {row.ticket_number} \nSeat Number: {row.seat_number}\nTicket Status: {row.status}\nBooking Time: {row.booking_time} ')
-                confirm_del = input('Type a YES or NO to proceed with reservation cancellation: ').strip().upper()
+                confirm_del = input('\nType a YES or NO to proceed with reservation cancellation: \n').strip().upper()
                 if confirm_del == 'YES':
                     self.all_tickets.remove(row)
-                    with open(TICKETS_FILE, mode='w', newline='') as record:
-                        writer = csv.DictWriter(record, fieldnames=['customer_id', 'fullname', 'ticket_number', 'seat_number', 'booking_time', 'status', 'ticket_type', 'window_seat'])
-                        writer.writeheader()
-                        for ticket in self.all_tickets:
-                            writer.writerow(ticket.prep_payload())
+                    self.write_to_csv()
                     print(f'Reservation for Ticket Number: {booked_ticket_number} has been cancelled!')
+                    print(f'\nSeats remaining: {100 - len([ticket for ticket in self.all_tickets if ticket.status == 'Active'])}')
                     return
                 else:
                     print('Cancellation aborted.')
                     return
-            else:
-                print(f'No ticket found with this Ticket Number: {booked_ticket_number}')
-                break
+
+        print(f'\nNo ticket found with this Ticket Number: {booked_ticket_number}')
 
 
     def edit_ticket(self):
@@ -108,7 +109,7 @@ class Ticketing:
                 new_fullname = f'{input(f'Enter Your First Name[{list(row.fullname.split(' '))[0]}]: ').title().strip()} {input(f'Enter Your Last Name[{list(row.fullname.split(' '))[1]}]: ').title().strip()}' or row.fullname
                 row.fullname = new_fullname
                 with open(TICKETS_FILE, mode='w', newline='') as record:
-                    writer = csv.DictWriter(record, fieldnames=['customer_id', 'fullname', 'ticket_number', 'seat_number', 'booking_time', 'status', 'ticket_type', 'window_seat'])
+                    writer = csv.DictWriter(record, fieldnames=['customer_id', 'fullname', 'ticket_number', 'seat_number', 'booking_time', 'status', 'window_seat'])
                     writer.writeheader()
                     for ticket in self.all_tickets:
                         writer.writerow(ticket.prep_payload())

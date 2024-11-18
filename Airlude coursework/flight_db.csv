@@ -1,8 +1,10 @@
-customer_id,fullname,ticket_number,seat_number,booking_time,status,ticket_type,window_seat
-444,Hall Kilo,156 - 35248,10,15-11-2024 14:13:03,active,Economy,True
-023,Juaas Hjkj,246 - 14235,11,15-11-2024 14:13:51,active,Economy,False
-442,Joui Sdeed,256 - 04334,12,15-11-2024 14:16:03,active,Economy,True
-352,Uiuuu Juhhe,012 - 23377,13,15-11-2024 14:20:43,active,Economy,False
-055,Johuua Looo,045 - 03344,14,15-11-2024 14:24:13,active,Economy,True
-,,,,,,,
-055,Tyruuu Rees,445-15554,15,16-11-2024 15:04:44,active,Economy,False
+customer_id,fullname,ticket_number,seat_number,booking_time,status,window_seat
+,,,,,,
+055,Tyruuu Rees,445-15554,15,16-11-2024 15:04:44,active,False
+313,Jhjh Nbnb,353-03644,1,17-11-2024 22:27:31,Active,No
+253,Tyrtrt Dffffgdg,446-44456,3,17-11-2024 22:35:15,Active,No
+314,Hwhrrr Asde,335-42557,5,17-11-2024 22:50:34,Active,False
+433,Gehr Ghrht,254-42478,6,17-11-2024 22:57:30,Active,True
+116,Freee Ghgdhd,125-13437,7,17-11-2024 23:01:30,Active,False
+016,Fgdggs Hkjdjsjs,046-12637,8,17-11-2024 23:55:48,Active,True
+136,Likoo Taior,215-33567,7,18-11-2024 00:57:40,Active,False
