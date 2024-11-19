@@ -12,6 +12,12 @@ class Welcome:
         self.choice = choice
 
     def menu(self):
+        def count_seats_available():
+            tickets = 0
+            for rows in self.count_tickets.all_tickets:
+                tickets = tickets + 1
+            return tickets
+
         menu_items = ['1 - Book a Reservation', '2 - Modify a Reservation', '3 - Cancel a Reservation', '4 - View a Reservation Details', '5 - View Seat Mapping', '6 - Exit']
         for item in menu_items:
             print(f'✈ {item}')
@@ -49,6 +55,9 @@ class Welcome:
 
         self.main()
 
+        print(f'Total Seats Available: {self.total_seats - count_seats_available()}')
+        print(f'Total Seats Booked: {count_seats_available()} \n')
+
 
 
     def main(self):
@@ -62,11 +71,13 @@ class Welcome:
             for rows in self.count_tickets.all_tickets:
                 tickets = tickets + 1
             return tickets
+
         print(f'Total Seats Available: {self.total_seats - count_seats_available()}')
         print(f'Total Seats Booked: {count_seats_available()} \n')
 
         print('What would you like to do today?')
         self.menu()
+
 
 
 # ========================= Initializer ==================

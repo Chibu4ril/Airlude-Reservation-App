@@ -20,6 +20,17 @@ class Ticketing:
             print('No record found!')
         return all_tickets
 
+    def assign_seat_number(self):
+        while True:
+            # Calculate the next seat number
+            next_seat_number = len([ticket for ticket in self.all_tickets if ticket.status == 'Active'])
+            # Check if the seat number already exists
+            if any(ticket.seat_number == str(next_seat_number) for ticket in self.all_tickets):
+                print(f"Seat Number {next_seat_number} already exists. Trying the next seat number...")
+            else:
+                print(f"Assigned Seat Number: {next_seat_number}")
+                return next_seat_number
+
     @classmethod
     def customer_id(cls):
         count = 0
@@ -73,7 +84,7 @@ class Ticketing:
 
         ticket_number = f'{self.customer_id()}-{self.booking_id()}'
         customer_id = self.customer_id()
-        seat_number = len([ticket for ticket in self.all_tickets if ticket.status == 'Active'])
+        seat_number = self.assign_seat_number()
         window_seat = str(seat_number % 2 == 0)
         booking_time = datetime.now().strftime('%d-%m-%Y %H:%M:%S')
         status = 'Active'.title()
@@ -82,9 +93,7 @@ class Ticketing:
         frontend_payload = my_ticket.prep_payload()
         display_payload = f'\nName: {frontend_payload['fullname']} \nTicket Number: {frontend_payload['ticket_number']} \nSeat Number: {frontend_payload['seat_number']} \nWindow Seat: {frontend_payload['window_seat']}'
         self.all_tickets.append(my_ticket)
-
         self.write_to_csv()
-
         print(f'\nHello {list(fullname.split(' '))[0]}! \nYour flight ticket with the following details has been booked successfully!: \n{display_payload}')
         return my_ticket
 
