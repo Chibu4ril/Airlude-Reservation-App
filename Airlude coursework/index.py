@@ -5,12 +5,13 @@ class Welcome:
     def __init__(self):
         self.count_tickets = Ticketing()
         self.total_seats = 100
-        self.tickets = self.count_seats_available()
         self.create_ticket = Ticketing()
         self.delete_ticket = Ticketing()
         self.read_ticket = Ticketing()
         self.update_ticket = Ticketing()
         self.choice = choice
+
+
 
     def menu(self):
         menu_items = ['1 - Book a Reservation', '2 - Modify a Reservation', '3 - Cancel a Reservation', '4 - View a Reservation Details', '5 - View Seat Mapping', '6 - Exit']
@@ -50,19 +51,14 @@ class Welcome:
         self.main()
 
 
-
-
-    def count_seats_available(self):
-        return len(self.count_tickets.all_tickets)
-
     def main(self):
         print('\n===========================================================')
         print('    Welcome to Airlude Airline Ticket Reservation System  ')
         print('       You are a ticket away from your destination!!!        ')
         print('      ✈️============================================✈️        \n')
 
-        print(f'Total Seats Available: {self.total_seats - self.tickets}')
-        print(f'Total Seats Booked: {self.tickets} \n')
+        print(f'Total Seats Available: {self.total_seats - self.count_tickets.count_seats_available()}')
+        print(f'Total Seats Booked: {self.count_tickets.count_seats_available()} \n')
 
         print('What would you like to do today?')
         self.menu()

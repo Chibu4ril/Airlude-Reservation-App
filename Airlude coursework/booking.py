@@ -10,6 +10,10 @@ class Ticketing:
         self.all_tickets = self.query_tickets()
         self.config_ticket = TicketConfig
 
+
+    def count_seats_available(self):
+        return len(self.all_tickets)
+
     def query_tickets(self):
         all_tickets = []
         try:
@@ -17,6 +21,9 @@ class Ticketing:
                 parse = csv.DictReader(records)
                 all_tickets = [TicketConfig.payload_unwrapper(row) for row in parse]
         except FileNotFoundError:
+            with open(TICKETS_FILE, mode='w', newline='') as record:
+                writer = csv.DictWriter(record, fieldnames=['customer_id', 'fullname', 'ticket_number', 'seat_number', 'booking_time', 'status', 'window_seat'])
+                writer.writeheader()
             print('No record found!')
         return all_tickets
 
@@ -90,8 +97,11 @@ class Ticketing:
         status = 'Active'.title()
 
         my_ticket = self.config_ticket(customer_id, fullname, ticket_number, seat_number, booking_time, status, window_seat)
+        frontend_payload = my_ticket.prep_payload()
+        display_payload = f'\nName: {frontend_payload["fullname"]} \nTicket Number: {frontend_payload["ticket_number"]} \nSeat Number: {frontend_payload["seat_number"]} \nWindow Seat: {frontend_payload['window_seat']}'
         self.all_tickets.append(my_ticket)
         self.write_to_csv()
+        self.count_seats_available()
         print(f'\nHello {list(fullname.split(' '))[0]}! \nYour flight ticket with the following details has been booked successfully!: \n{display_payload}')
         return my_ticket
 
