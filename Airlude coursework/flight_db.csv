@@ -1,25 +1,7 @@
 customer_id,fullname,ticket_number,seat_number,booking_time,status,window_seat
-,,,,,,
-055,Tyruuu Rees,445-15554,15,16-11-2024 15:04:44,active,False
-313,Jhjh Nbnb,353-03644,1,17-11-2024 22:27:31,Active,No
-253,Tyrtrt Dffffgdg,446-44456,3,17-11-2024 22:35:15,Active,No
-314,Hwhrrr Asde,335-42557,5,17-11-2024 22:50:34,Active,False
-433,Innocent# Harety,254-42478,6,17-11-2024 22:57:30,Active,True
-116,Freee Ghgdhd,125-13437,7,17-11-2024 23:01:30,Active,False
-016,Fgdggs Hkjdjsjs,046-12637,8,17-11-2024 23:55:48,Active,True
-136,Likoo Taior,215-33567,7,18-11-2024 00:57:40,Active,False
-234,Halle Asmath,054-34366,7,18-11-2024 01:40:38,Active,False
-334,2 5,232-41245,8,18-11-2024 01:54:20,Active,True
-244,Gfgfgf Fghfhg,136-44544,9,18-11-2024 02:02:54,Active,False
-416,Innocent John#,113-31266,10,18-11-2024 12:22:27,Active,True
-043,Tyrrtt Ewewew,155-13365,11,18-11-2024 15:58:01,Active,False
-033,Rti Opi,045-01635,12,18-11-2024 16:17:00,Active,True
-413,Yuy Iii,332-34345,13,18-11-2024 16:17:56,Active,False
-113,Hghggh Bbbhsdb,346-21354,14,18-11-2024 16:20:18,Active,True
-246,Tryryyr Dfdfdfdf,132-02548,15,18-11-2024 16:31:19,Active,False
-113,Iuiuier Jjhdf,116-24348,16,18-11-2024 18:29:08,Active,True
-222,Lkokjij Cvdgdfgfh,424-02276,17,18-11-2024 23:00:31,Active,False
-043,Assdedr Fggfgfgfk,112-34635,18,18-11-2024 23:18:39,Active,True
-015,Ghghffdfdfd Bbnvbgbh,116-23464,19,18-11-2024 23:52:26,Active,False
-424,Gggfgf Ytytyyyy,136-11548,20,18-11-2024 23:53:03,Active,True
-044,Vvbbv Cvcvc,423-21368,21,18-11-2024 23:56:01,Active,False
+326,Oruko Jesu,453-44344,0,19-11-2024 07:41:04,Active,True
+242,Hfhdhfdhfhg Bbcbxbvcx,033-12274,1,19-11-2024 08:00:36,Active,False
+154,Bsndndnbds Bxbnbcnbcxc,134-44575,2,19-11-2024 08:00:52,Active,True
+244,Jfhdhf Hshhds,026-05357,3,19-11-2024 08:09:32,Active,False
+133,Gfgfgfgfg Fdfdfdfdf,112-45644,4,19-11-2024 08:24:42,Active,True
+252,Gfggfgf Ggfgfgf,315-25365,5,19-11-2024 08:27:53,Active,False

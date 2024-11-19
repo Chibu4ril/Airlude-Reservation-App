@@ -5,6 +5,7 @@ class Welcome:
     def __init__(self):
         self.count_tickets = Ticketing()
         self.total_seats = 100
+        self.tickets = self.count_seats_available()
         self.create_ticket = Ticketing()
         self.delete_ticket = Ticketing()
         self.read_ticket = Ticketing()
@@ -12,12 +13,6 @@ class Welcome:
         self.choice = choice
 
     def menu(self):
-        def count_seats_available():
-            tickets = 0
-            for rows in self.count_tickets.all_tickets:
-                tickets = tickets + 1
-            return tickets
-
         menu_items = ['1 - Book a Reservation', '2 - Modify a Reservation', '3 - Cancel a Reservation', '4 - View a Reservation Details', '5 - View Seat Mapping', '6 - Exit']
         for item in menu_items:
             print(f'✈ {item}')
@@ -52,13 +47,13 @@ class Welcome:
             exit()
         else:
             print('You entered an invalid choice. \nPlease Try Again')
-
         self.main()
 
-        print(f'Total Seats Available: {self.total_seats - count_seats_available()}')
-        print(f'Total Seats Booked: {count_seats_available()} \n')
 
 
+
+    def count_seats_available(self):
+        return len(self.count_tickets.all_tickets)
 
     def main(self):
         print('\n===========================================================')
@@ -66,17 +61,12 @@ class Welcome:
         print('       You are a ticket away from your destination!!!        ')
         print('      ✈️============================================✈️        \n')
 
-        def count_seats_available():
-            tickets = 0
-            for rows in self.count_tickets.all_tickets:
-                tickets = tickets + 1
-            return tickets
-
-        print(f'Total Seats Available: {self.total_seats - count_seats_available()}')
-        print(f'Total Seats Booked: {count_seats_available()} \n')
+        print(f'Total Seats Available: {self.total_seats - self.tickets}')
+        print(f'Total Seats Booked: {self.tickets} \n')
 
         print('What would you like to do today?')
         self.menu()
+
 
 
 

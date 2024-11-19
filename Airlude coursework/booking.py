@@ -90,8 +90,6 @@ class Ticketing:
         status = 'Active'.title()
 
         my_ticket = self.config_ticket(customer_id, fullname, ticket_number, seat_number, booking_time, status, window_seat)
-        frontend_payload = my_ticket.prep_payload()
-        display_payload = f'\nName: {frontend_payload['fullname']} \nTicket Number: {frontend_payload['ticket_number']} \nSeat Number: {frontend_payload['seat_number']} \nWindow Seat: {frontend_payload['window_seat']}'
         self.all_tickets.append(my_ticket)
         self.write_to_csv()
         print(f'\nHello {list(fullname.split(' '))[0]}! \nYour flight ticket with the following details has been booked successfully!: \n{display_payload}')
