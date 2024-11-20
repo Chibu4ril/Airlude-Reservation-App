@@ -1,2 +1,2 @@
-customer_id,fullname,ticket_number,seat_number,booking_time,status,window_seat
-226,Innocent Joiuy,043-43578,1,19-11-2024 18:29:13,Active,False
+customer_id|fullname|ticket_number|seat_number|booking_time|status|window_seat
+315|Chapter Book|052-11557|1|20-11-2024 16:43:03|Active|False

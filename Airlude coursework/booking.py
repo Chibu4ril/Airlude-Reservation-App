@@ -1,14 +1,18 @@
 import csv
 from datetime import datetime
 from ticketconfig import TicketConfig
+from ticketconfig import CancelledTicketConfig
 import random
 
 TICKETS_FILE = 'flight_db.csv'
+CANCELLED_TICKETS = "cancelled_tickets.csv"
 
 class Ticketing:
     def __init__(self):
         self.all_tickets = self.query_tickets()
+        self.all_cancelled_tickets = self.query_cancelled_tickets()
         self.config_ticket = TicketConfig
+        self.cancelled_ticket_config = CancelledTicketConfig
         self.counter = len([ticket for ticket in self.all_tickets if ticket.status == 'Active'])
 
 
@@ -19,11 +23,24 @@ class Ticketing:
                 parse = csv.DictReader(records)
                 all_tickets = [TicketConfig.payload_unwrapper(row) for row in parse]
         except FileNotFoundError:
-            with open(TICKETS_FILE, mode='w', newline='') as record:
-                writer = csv.DictWriter(record, fieldnames=['customer_id', 'fullname', 'ticket_number', 'seat_number', 'booking_time', 'status', 'window_seat'])
-                writer.writeheader()
+            # with open(TICKETS_FILE, mode='w', newline='') as record:
+            #     writer = csv.DictWriter(record, fieldnames=['customer_id', 'fullname', 'ticket_number', 'seat_number', 'booking_time', 'status', 'window_seat'])
+            #     writer.writeheader()
             print('No record found!')
         return all_tickets
+
+    def query_cancelled_tickets(self):
+        all_cancelled_tickets = []
+        try:
+            with open(CANCELLED_TICKETS, mode='r') as records:
+                parse = csv.DictReader(records)
+                all_cancelled_tickets = [CancelledTicketConfig.payload_unwrapper_2(row) for row in parse]
+        except FileNotFoundError:
+            # with open(CANCELLED_TICKETS, mode='w', newline='') as record:
+            #     writer = csv.DictWriter(record, fieldnames=["customer_id", "fullname", "ticket_number", "seat_number", "booking_time", "status", "window_seat", "cancelled_date"])
+            #     writer.writeheader()
+            print('No record found!')
+        return all_cancelled_tickets
 
     def assign_seat_number(self):
         while True:
@@ -66,6 +83,12 @@ class Ticketing:
             writer.writeheader()
             for ticket in self.all_tickets:
                 writer.writerow(ticket.prep_payload())
+    def write_to_cancelled_csv(self):
+        with open(CANCELLED_TICKETS, mode='w', newline='') as record:
+            writer = csv.DictWriter(record, fieldnames=['customer_id', 'fullname', 'ticket_number', 'seat_number', 'booking_time', 'status', 'window_seat', 'cancelled_date'])
+            writer.writeheader()
+            for ticket in self.all_cancelled_tickets:
+                writer.writerow(ticket.cancelled_payload())
 
     def get_valid_name(self, prompt):
         while True:
@@ -80,7 +103,7 @@ class Ticketing:
                 return name
 
     def book_seat(self):
-        if len([ticket for ticket in self.all_tickets if ticket.status == 'Active']) >= 100:
+        if len([ticket for ticket in self.all_tickets if ticket.status == "Active"]) >= 100:
             print('All seats are booked! \nNo more empty seats available!')
             return None
         first_name = self.get_valid_name("Enter Your First Name: ")
@@ -96,11 +119,11 @@ class Ticketing:
 
         my_ticket = self.config_ticket(customer_id, fullname, ticket_number, seat_number, booking_time, status, window_seat)
         frontend_payload = my_ticket.prep_payload()
-        display_payload = f'\nName: {frontend_payload["fullname"]} \nTicket Number: {frontend_payload["ticket_number"]} \nSeat Number: {frontend_payload["seat_number"]} \nWindow Seat: {frontend_payload['window_seat']}'
+        display_payload = f'\nName: {frontend_payload["fullname"]} \nTicket Number: {frontend_payload["ticket_number"]} \nSeat Number: {frontend_payload["seat_number"]} \nWindow Seat: {frontend_payload["window_seat"]}'
         self.all_tickets.append(my_ticket)
         self.write_to_csv()
-        print(f'\nHello {list(fullname.split(' '))[0]}! \nYour flight ticket with the following details has been booked successfully!: \n{display_payload}')
-        print(f'\nSeats remaining: {100 - len([ticket for ticket in self.all_tickets if ticket.status == 'Active'])}')
+        print(f'\nHello {list(fullname.split(" "))[0]}! \nYour flight ticket with the following details has been booked successfully!: \n{display_payload}')
+        print(f'\nSeats remaining: {100 - len([ticket for ticket in self.all_tickets if ticket.status == "Active"])}')
         return
 
     def read_tickets(self):
@@ -123,7 +146,8 @@ class Ticketing:
                     self.all_tickets.remove(row)
                     self.write_to_csv()
                     print(f'Reservation for Ticket Number: {booked_ticket_number} has been cancelled!')
-                    print(f'\nSeats remaining: {100 - len([ticket for ticket in self.all_tickets if ticket.status == 'Active'])}')
+                    self.write_to_cancelled_csv()
+                    print(f'\nSeats remaining: {100 - len([ticket for ticket in self.all_tickets if ticket.status == "Active"])}')
                 else:
                     print('Cancellation aborted.')
                     return
