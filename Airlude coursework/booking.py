@@ -30,7 +30,7 @@ class Ticketing:
     def assign_seat_number(self):
         while True:
             # Calculate the next seat number
-            next_seat_number = len([ticket for ticket in self.all_tickets if ticket.status == 'Active'])
+            next_seat_number = len([ticket for ticket in self.all_tickets if ticket.status == "Active"])
             # Check if the seat number already exists
             if any(ticket.seat_number == str(next_seat_number) for ticket in self.all_tickets):
                 print(f"Seat Number {next_seat_number} already exists. Trying the next seat number...")
@@ -98,11 +98,11 @@ class Ticketing:
 
         my_ticket = self.config_ticket(customer_id, fullname, ticket_number, seat_number, booking_time, status, window_seat)
         frontend_payload = my_ticket.prep_payload()
-        display_payload = f'\nName: {frontend_payload["fullname"]} \nTicket Number: {frontend_payload["ticket_number"]} \nSeat Number: {frontend_payload["seat_number"]} \nWindow Seat: {frontend_payload['window_seat']}'
+        display_payload = f'\nName: {frontend_payload["fullname"]} \nTicket Number: {frontend_payload["ticket_number"]} \nSeat Number: {frontend_payload["seat_number"]} \nWindow Seat: {frontend_payload["window_seat"]}'
         self.all_tickets.append(my_ticket)
         self.write_to_csv()
         self.count_seats_available()
-        print(f'\nHello {list(fullname.split(' '))[0]}! \nYour flight ticket with the following details has been booked successfully!: \n{display_payload}')
+        print(f'\nHello {list(fullname.split(" "))[0]}! \nYour flight ticket with the following details has been booked successfully!: \n{display_payload}')
         return my_ticket
 
     def read_tickets(self):
@@ -123,7 +123,7 @@ class Ticketing:
                     self.all_tickets.remove(row)
                     self.write_to_csv()
                     print(f'Reservation for Ticket Number: {booked_ticket_number} has been cancelled!')
-                    print(f'\nSeats remaining: {100 - len([ticket for ticket in self.all_tickets if ticket.status == 'Active'])}')
+                    print(f'\nSeats remaining: {100 - len([ticket for ticket in self.all_tickets if ticket.status == "Active"])}')
                     return
                 else:
                     print('Cancellation aborted.')
