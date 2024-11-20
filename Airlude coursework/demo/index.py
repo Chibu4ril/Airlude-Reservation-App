@@ -3,13 +3,12 @@ from booking import Ticketing
 
 class Welcome:
     def __init__(self):
-        self.count_tickets = Ticketing().counter
+        self.count_tickets = Ticketing()
         self.total_seats = 100
         self.create_ticket = Ticketing()
         self.delete_ticket = Ticketing()
         self.read_ticket = Ticketing()
         self.update_ticket = Ticketing()
-        self.ticket_mapping = Ticketing()
         self.choice = choice
 
 
@@ -17,7 +16,7 @@ class Welcome:
     def menu(self):
         menu_items = ['1 - Book a Reservation', '2 - Modify a Reservation', '3 - Cancel a Reservation', '4 - View a Reservation Details', '5 - View Seat Mapping', '6 - Exit']
         for item in menu_items:
-            print(f'✈ {item} ')
+            print(f'✈ {item}')
         print('')
 
         try:
@@ -43,7 +42,7 @@ class Welcome:
             self.read_ticket.read_tickets()
         elif self.choice == 5:
             print(menu_items[4] + ' - SELECTED \n')
-            self.ticket_mapping.display_seating()
+            self.count_tickets.print_window_seats()
         elif self.choice == 6:
             print("Thank you for using Airlude Airline Ticket Reservation System!")
             exit()
@@ -58,9 +57,8 @@ class Welcome:
         print('       You are a ticket away from your destination!!!        ')
         print('      ✈️============================================✈️        \n')
 
-
-        print(f'Total Seats Available: {self.total_seats - self.count_tickets }')
-        print(f'Total Seats Booked: {self.count_tickets} \n')
+        print(f'Total Seats Available: {self.total_seats - self.count_tickets.count_seats_available()}')
+        print(f'Total Seats Booked: {self.count_tickets.count_seats_available()} \n')
 
         print('What would you like to do today?')
         self.menu()

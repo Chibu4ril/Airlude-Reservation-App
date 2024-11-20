@@ -1,0 +1,10 @@
+customer_id,fullname,ticket_number,seat_number,booking_time,status,window_seat
+326,Oruko Jesu,453-44344,0,19-11-2024 07:41:04,Active,True
+242,Hfhdhfdhfhg Bbcbxbvcx,033-12274,1,19-11-2024 08:00:36,Active,False
+154,Bsndndnbds Bxbnbcnbcxc,134-44575,2,19-11-2024 08:00:52,Active,True
+244,Jfhdhf Hshhds,026-05357,3,19-11-2024 08:09:32,Active,False
+133,Gfgfgfgfg Fdfdfdfdf,112-45644,4,19-11-2024 08:24:42,Active,True
+252,Gfggfgf Ggfgfgf,315-25365,5,19-11-2024 08:27:53,Active,False
+024,Fdfdfdfdf Rererererer,116-41338,6,19-11-2024 08:40:03,Active,True
+052,Gfgfgfgfg Ffdfddfdfd,325-44545,7,19-11-2024 08:40:56,Active,False
+023,Hdhhhfhdhfhfd Hdhhhhdhdh,342-35635,8,19-11-2024 08:59:20,Active,True
