@@ -9,8 +9,10 @@ class Ticketing:
     def __init__(self):
         self.all_tickets = self.query_tickets()
         self.config_ticket = TicketConfig
-        self.counter = len([ticket for ticket in self.all_tickets if ticket.status == 'Active'])
 
+
+    def count_seats_available(self):
+        return len(self.all_tickets)
 
     def query_tickets(self):
         all_tickets = []
@@ -28,7 +30,7 @@ class Ticketing:
     def assign_seat_number(self):
         while True:
             # Calculate the next seat number
-            next_seat_number = len([ticket for ticket in self.all_tickets if ticket.status == 'Active']) + 1
+            next_seat_number = len([ticket for ticket in self.all_tickets if ticket.status == 'Active'])
             # Check if the seat number already exists
             if any(ticket.seat_number == str(next_seat_number) for ticket in self.all_tickets):
                 print(f"Seat Number {next_seat_number} already exists. Trying the next seat number...")
@@ -99,18 +101,16 @@ class Ticketing:
         display_payload = f'\nName: {frontend_payload["fullname"]} \nTicket Number: {frontend_payload["ticket_number"]} \nSeat Number: {frontend_payload["seat_number"]} \nWindow Seat: {frontend_payload['window_seat']}'
         self.all_tickets.append(my_ticket)
         self.write_to_csv()
+        self.count_seats_available()
         print(f'\nHello {list(fullname.split(' '))[0]}! \nYour flight ticket with the following details has been booked successfully!: \n{display_payload}')
-        print(f'\nSeats remaining: {100 - len([ticket for ticket in self.all_tickets if ticket.status == 'Active'])}')
-        return
+        return my_ticket
 
     def read_tickets(self):
         booked_ticket_number = input('Enter Your Ticket Number: ')
         for row in self.all_tickets:
             if row.ticket_number == booked_ticket_number:
-                print(f'\nName: {row.fullname} \nTicket Number: {row.ticket_number} \nSeat Number: {row.seat_number}\nTicket Status: {row.status}\nBooking Time: {row.booking_time} ')
-                confirm_del = input('\nProceed to Main Menu:').strip().upper()
-                if confirm_del == 'YES':
-                    return
+                print(f'Name: {row.fullname} \nTicket Number: {row.ticket_number} \nSeat Number: {row.seat_number}\nTicket Status: {row.status}\nBooking Time: {row.booking_time} ')
+                return
         print(f'No ticket found with Ticket Number: {booked_ticket_number}')
 
     def del_tickets(self):
@@ -124,6 +124,7 @@ class Ticketing:
                     self.write_to_csv()
                     print(f'Reservation for Ticket Number: {booked_ticket_number} has been cancelled!')
                     print(f'\nSeats remaining: {100 - len([ticket for ticket in self.all_tickets if ticket.status == 'Active'])}')
+                    return
                 else:
                     print('Cancellation aborted.')
                     return
@@ -134,6 +135,7 @@ class Ticketing:
         booked_ticket_number = input('Enter Your Ticket Number: ').strip()
         # Flag to check if the ticket is found
         ticket_found = False
+
         for row in self.all_tickets:
             if row.ticket_number == booked_ticket_number:
                 ticket_found = True
@@ -143,7 +145,7 @@ class Ticketing:
                       f'Seat Number: {row.seat_number}\n'
                       f'Ticket Status: {row.status}\n'
                       f'Booking Time: {row.booking_time}\n')
-                print('\nEnter new details or Press Enter to keep the current details.\n')
+                print('Enter new details or Press Enter to keep the current details.\n')
 
                 # Get new details from user or retain current details
                 new_first_name = input(f'Enter Your First Name [{row.fullname.split(" ")[0]}]: ').strip().title() or \
@@ -153,7 +155,11 @@ class Ticketing:
                 row.fullname = f"{new_first_name} {new_last_name}"
 
                 # Update the tickets file
-                self.write_to_csv()
+                with open(TICKETS_FILE, mode='w', newline='') as record:
+                    writer = csv.DictWriter(record, fieldnames=['customer_id', 'fullname', 'ticket_number', 'seat_number', 'booking_time', 'status', 'window_seat'])
+                    writer.writeheader()
+                    for ticket in self.all_tickets:
+                        writer.writerow(ticket.prep_payload())
 
                 print(f'Reservation for Ticket Number: {booked_ticket_number} has been updated!')
                 break  # Exit the loop after finding and updating the ticket
@@ -161,31 +167,10 @@ class Ticketing:
         if not ticket_found:
             print(f'No ticket found with Ticket Number: {booked_ticket_number}')
 
-    def display_seating(self, total_seats=100, seats_per_row=3):
-        print("\nAircraft Seating Chart")
-        print("=" * (seats_per_row * 5 + 6))
 
-        # Get the list of seat numbers for booked seats
-        booked_seats = [int(ticket.seat_number) for ticket in self.all_tickets if ticket.status == 'Active']
 
-        seat_number = 1  # Start seat numbering
 
-        # Loop through rows
-        for row in range(1, (total_seats // seats_per_row) + 1):
-            row_display = []
-            for seat in range(seats_per_row):
-                # Check if the seat is booked
-                if seat_number in booked_seats:
-                    row_display.append(" X ")
-                else:
-                    row_display.append(f"{seat_number:2} ")
-                seat_number += 1
 
-                # Stop when the total seats are exhausted
-                if seat_number > total_seats:
-                    break
 
-            # Print the row
-            print(" | ".join(row_display))
 
-        print("=" * (seats_per_row * 5 + 6))
+
