@@ -3,7 +3,7 @@ from booking import Ticketing
 
 class Welcome:
     def __init__(self):
-        self.count_tickets = Ticketing().counter
+        # self.count_tickets = Ticketing().counter
         self.total_seats = 100
         self.create_ticket = Ticketing()
         self.delete_ticket = Ticketing()
@@ -59,8 +59,8 @@ class Welcome:
         print('      ✈️============================================✈️        \n')
 
 
-        print(f'Total Seats Available: {self.total_seats - self.count_tickets }')
-        print(f'Total Seats Booked: {self.count_tickets} \n')
+        # print(f'Total Seats Available: {self.total_seats - self.count_tickets }')
+        # print(f'Total Seats Booked: {self.count_tickets} \n')
 
         print('What would you like to do today?')
         self.menu()
