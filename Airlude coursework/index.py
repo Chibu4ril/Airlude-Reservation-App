@@ -3,7 +3,7 @@ from booking import Ticketing
 
 class Welcome:
     def __init__(self):
-        # self.count_tickets = Ticketing().counter
+        self.count_tickets = Ticketing().counter
         self.total_seats = 100
         self.create_ticket = Ticketing()
         self.delete_ticket = Ticketing()
@@ -15,7 +15,7 @@ class Welcome:
 
 
     def menu(self):
-        menu_items = ['1 - Book a Reservation', '2 - Modify a Reservation', '3 - Cancel a Reservation', '4 - View a Reservation Details', '5 - View Seat Mapping', '6 - Exit']
+        menu_items = ['1 - Book a Reservation', '2 - View a Reservation Details', '3 - Modify a Reservation', '4 - Cancel a Reservation', '5 - View Seat Mapping', '6 - Exit']
         for item in menu_items:
             print(f'✈ {item} ')
         print('')
@@ -34,13 +34,16 @@ class Welcome:
             self.create_ticket.book_seat()
         elif self.choice == 2:
             print(menu_items[1] + ' - SELECTED \n')
-            self.update_ticket.edit_ticket()
+            self.read_ticket.read_tickets()
+
         elif self.choice == 3:
             print(menu_items[2] + '- SELECTED \n')
-            self.delete_ticket.del_tickets()
+            self.update_ticket.edit_ticket()
+
         elif self.choice == 4:
             print(menu_items[3] + ' - SELECTED \n')
-            self.read_ticket.read_tickets()
+            self.delete_ticket.del_tickets()
+
         elif self.choice == 5:
             print(menu_items[4] + ' - SELECTED \n')
             self.ticket_mapping.display_seating()
@@ -59,8 +62,8 @@ class Welcome:
         print('      ✈️============================================✈️        \n')
 
 
-        # print(f'Total Seats Available: {self.total_seats - self.count_tickets }')
-        # print(f'Total Seats Booked: {self.count_tickets} \n')
+        print(f'Total Seats Available: {self.total_seats - self.count_tickets }')
+        print(f'Total Seats Booked: {self.count_tickets} \n')
 
         print('What would you like to do today?')
         self.menu()

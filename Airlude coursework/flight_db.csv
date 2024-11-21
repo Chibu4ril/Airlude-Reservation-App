@@ -1,2 +1,7 @@
-customer_id|fullname|ticket_number|seat_number|booking_time|status|window_seat
-315|Chapter Book|052-11557|1|20-11-2024 16:43:03|Active|False
+customer_id,fullname,ticket_number,seat_number,booking_time,status,window_seat
+013,Innocent Hope,442-35345,1,21-11-2024 02:24:39,Active,False
+235,Hgahdhagdhd Adnbasdasdsa,436-04244,2,21-11-2024 02:37:14,Active,True
+016,Hdhgfgdshf Nbdnbsbnf,156-34554,3,21-11-2024 02:50:06,Active,False
+013,Hsjdhjhds Ncxbbcxhfn,433-25376,4,21-11-2024 03:01:32,Active,True
+012,Fdffdf Sfdsfdx,316-44235,5,21-11-2024 03:02:54,Active,False
+022,Sdffs Sfsfcs,154-05255,6,21-11-2024 03:12:48,Active,True
