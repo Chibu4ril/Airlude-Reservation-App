@@ -17,8 +17,6 @@ class Ticketing:
         self.time = datetime.now().strftime('%d-%m-%Y %H:%M:%S')
         self.all_cancelled_tickets = []
 
-
-
     def query_tickets(self):
         all_tickets = []
         try:

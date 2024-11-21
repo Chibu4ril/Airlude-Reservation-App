@@ -35,7 +35,6 @@ class Welcome:
         elif self.choice == 2:
             print(menu_items[1] + ' - SELECTED \n')
             self.read_ticket.read_tickets()
-
         elif self.choice == 3:
             print(menu_items[2] + '- SELECTED \n')
             self.update_ticket.edit_ticket()
@@ -65,7 +64,7 @@ class Welcome:
         print(f'Total Seats Available: {self.total_seats - self.count_tickets }')
         print(f'Total Seats Booked: {self.count_tickets} \n')
 
-        print('What would you like to do today?')
+        print('What would you like to do today? ')
         self.menu()
 
 
