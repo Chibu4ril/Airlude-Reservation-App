@@ -4,7 +4,7 @@ from ticketconfig import TicketConfig
 from ticketconfig import CancelledTicketConfig
 import random
 
-TICKETS_FILE = 'flight_db.csv'
+TICKETS_FILE = 'gui_flight_db.csv'
 CANCELLED_TICKETS = "cancelled_tickets.csv"
 
 class Ticketing:

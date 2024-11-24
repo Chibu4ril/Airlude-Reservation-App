@@ -6,7 +6,7 @@ from datetime import datetime
 from ticketconfig import TicketConfig
 import random
 
-TICKETS_FILE = 'flight_db.csv'
+TICKETS_FILE = 'gui_flight_db.csv'
 
 class WelcomeGUI:
     def __init__(self, root):
@@ -17,6 +17,7 @@ class WelcomeGUI:
         self.time = datetime.now().strftime('%d-%m-%Y %H:%M:%S')
         self.all_tickets = self.query_tickets()
         self.config_ticket = TicketConfig
+        self.customer_id = self.customer_id()
 
 
 
@@ -30,6 +31,16 @@ class WelcomeGUI:
         self.create_layout()
         self.create_widgets()
         self.update_seats_info()
+
+
+    def write_to_csv(self):
+        with open(TICKETS_FILE, mode='w', newline='') as record:
+            writer = csv.DictWriter(record, fieldnames=['customer_id', 'fullname', 'ticket_number', 'seat_number', 'booking_time', 'status', 'window_seat'])
+            writer.writeheader()
+            for ticket in self.all_tickets:
+                writer.writerow(ticket.prep_payload())
+            record.flush()
+        self.all_tickets = self.query_tickets()
 
     def query_tickets(self):
         all_tickets = []
@@ -136,9 +147,9 @@ class WelcomeGUI:
         # Menu Buttons
         buttons = [
             ("Book a Reservation", self.show_booking_form),
+            ("View Reservation Details", self.view_reservation),
             ("Modify a Reservation", self.modify_reservation),
             ("Cancel a Reservation", self.cancel_reservation),
-            ("View Reservation Details", self.view_reservation),
             ("View Seat Mapping", self.view_seat_mapping),
             ("Exit", self.exit_system),
         ]
@@ -177,26 +188,28 @@ class WelcomeGUI:
             return "Name cannot contain symbols or special characters."
         return None  # No error means the name is valid
 
-
-
     def show_booking_form(self):
         self.clear_display_area()
 
+        details_label = ttk.Label(self.display_area, text="Book a Ticket",
+                                  font=("Helvetica", 14, "bold"), background='white')
+        details_label.grid(row=0, column=0, columnspan=2, pady=5, sticky="w")
+
         # First Name
         first_name_label = ttk.Label(self.display_area, text="First Name:")
-        first_name_label.grid(row=0, column=0, pady=5, padx=5, sticky="w")
+        first_name_label.grid(row=1, column=0, pady=5, padx=5, sticky="w")
         self.first_name_entry = ttk.Entry(self.display_area)
-        self.first_name_entry.grid(row=0, column=1, pady=5, padx=5, sticky="ew")
+        self.first_name_entry.grid(row=1, column=1, pady=5, padx=5, sticky="ew")
 
         # Last Name
         last_name_label = ttk.Label(self.display_area, text="Last Name:")
-        last_name_label.grid(row=1, column=0, pady=5, padx=5, sticky="w")
+        last_name_label.grid(row=2, column=0, pady=5, padx=5, sticky="w")
         self.last_name_entry = ttk.Entry(self.display_area)
-        self.last_name_entry.grid(row=1, column=1, pady=5, padx=5, sticky="ew")
+        self.last_name_entry.grid(row=2, column=1, pady=5, padx=5, sticky="ew")
 
         # Submit Button
         submit_button = ttk.Button(self.display_area, text="Submit", command=self.book_reservation)
-        submit_button.grid(row=2, column=0, columnspan=2, pady=20, sticky="ew")
+        submit_button.grid(row=3, column=0, columnspan=2, pady=15, sticky="ew")
 
         # Configure column weights for equal spacing
         self.display_area.grid_columnconfigure(0, weight=1)
@@ -220,49 +233,362 @@ class WelcomeGUI:
             return
 
         # Booking logic
-        fullname = f"{first_name} {last_name}"
-        ticket_number = f'{self.customer_id()}-{self.booking_id()}'
+        fullname = f"{first_name.title()} {last_name.title()}"
+        ticket_number = f'{self.customer_id}-{self.booking_id()}'
         seat_number = self.assign_seat_number()
         window_seat = str(seat_number % 2 == 0)  # For window seat validation
         booking_time = self.time
         status = 'Active'.title()
 
-        my_ticket = self.config_ticket(self.customer_id(), fullname, ticket_number, seat_number, booking_time, status,
+        my_ticket = self.config_ticket(self.customer_id, fullname, ticket_number, seat_number, booking_time, status,
                                        window_seat)
         frontend_payload = my_ticket.prep_payload()
+
+        self.all_tickets.append(my_ticket)
+        self.write_to_csv()
+
+        self.clear_input_fields()
 
         # Construct the success message
         display_payload = f"Name: {frontend_payload['fullname']}\n" \
                           f"Ticket Number: {frontend_payload['ticket_number']}\n" \
+                          f"Customer ID: {frontend_payload['customer_id']}\n" \
                           f"Seat Number: {frontend_payload['seat_number']}\n" \
                           f"Window Seat: {frontend_payload['window_seat']}"
 
         seats_remaining = 100 - len([ticket for ticket in self.all_tickets if ticket.status == "Active"])
 
         # Confirmation message
-        success_message = f"\nHello {first_name}!\n" \
-                          f"Your flight ticket with the following details has been booked successfully!:\n" \
-                          f"{display_payload}\n\n" \
-                          f"Seats remaining: {seats_remaining}"
+        success_message = f"Hello {first_name.upper()}!\n\n" \
+                          f"Your flight ticket with the following details has been booked successfully!\n\n" \
+                          f"{display_payload}\n" \
+                          f"\nSEATS REMAINING: {seats_remaining} seats available"\
 
         # Append to the display area
         self.show_message(success_message)
 
 
 
+    def clear_input_fields(self):
+        """Clear the input fields in the booking form."""
+        self.first_name_entry.delete(0, tk.END)
+        self.last_name_entry.delete(0, tk.END)
+
     def modify_reservation(self):
         """Modify an existing reservation."""
-        self.ticket_manager.edit_ticket()
-        self.update_seats_info()
+        self.clear_display_area()
 
-    def cancel_reservation(self):
-        """Cancel a reservation."""
-        self.ticket_manager.del_tickets()
-        self.update_seats_info()
+        details_label = ttk.Label(self.display_area, text="Edit Ticket",
+                                  font=("Helvetica", 14, "bold"), background='white')
+        details_label.grid(row=0, column=0, columnspan=2, pady=15, sticky="w")
+
+
+        # Ticket Number Input
+        ticket_number_label = ttk.Label(self.display_area, text="Enter Ticket Number:")
+        ticket_number_label.grid(row=1, column=0, pady=5, padx=5, sticky="w")
+        self.ticket_number_entry = ttk.Entry(self.display_area)
+        self.ticket_number_entry.grid(row=1, column=1, pady=5, padx=5, sticky="ew")
+
+        # Submit Button
+        submit_button = ttk.Button(self.display_area, text="Search", command=self.search_ticket)
+        submit_button.grid(row=3, column=0, columnspan=2, pady=20, sticky="ew")
+
+        # Configure column weights for equal spacing
+        self.display_area.grid_columnconfigure(0, weight=1)
+        self.display_area.grid_columnconfigure(1, weight=1)
+
+    def search_ticket(self):
+        """Search for a ticket by ticket number and allow modification."""
+        ticket_number = self.ticket_number_entry.get().strip()
+
+        # Search for the ticket
+        ticket_found = None
+        for row in self.all_tickets:
+            if row.ticket_number == ticket_number:
+                ticket_found = row
+                break
+
+        if not ticket_found:
+            self.show_message(f"No ticket found with Ticket Number: {ticket_number}")
+            return
+
+        # Display current ticket details and input fields for modification
+        self.display_edit_form(ticket_found)
+
+
+    def search_reserved_ticket(self):
+        """Search for a ticket by ticket number and allow modification."""
+        ticket_number = self.ticket_number_entry.get().strip()
+
+        # Search for the ticket
+        ticket_found = None
+        for row in self.all_tickets:
+            if row.ticket_number == ticket_number:
+                ticket_found = row
+                break
+
+        if not ticket_found:
+            self.show_message(f"No ticket found with Ticket Number: {ticket_number}")
+            return
+
+        # Display current ticket details and input fields for modification
+        self.display_details(ticket_found)
+
+    def display_details(self, ticket):
+        self.clear_display_area()
+
+        details_label = ttk.Label(self.display_area, text="View Reserved Ticket",
+                                  font=("Helvetica", 14, "bold"), background='white')
+        details_label.grid(row=0, column=0, columnspan=2, pady=5, sticky="w")
+
+        # Display Current Details
+        details_label = ttk.Label(self.display_area, text="Current Reservation Details:",
+                                  font=("Helvetica", 12, "bold"), background='white')
+        details_label.grid(row=1, column=0, columnspan=2, pady=5, sticky="w")
+
+        fields = {
+            "Name": ticket.fullname,
+            "Ticket Number": ticket.ticket_number,
+            "Seat Number": ticket.seat_number,
+            "Status": ticket.status,
+            "Booking Time": ticket.booking_time,
+        }
+
+        for i, (key, value) in enumerate(fields.items(), start=2):
+            label = ttk.Label(self.display_area, text=f"{key}: {value}", background='white')
+            label.grid(row=i, column=0, columnspan=2, pady=5, sticky="w")
+
+
+    def display_edit_form(self, ticket):
+        """Display the ticket's current details and fields for modification."""
+        self.clear_display_area()
+
+        details_label = ttk.Label(self.display_area, text="Edit Ticket",
+                                  font=("Helvetica", 12, "bold"), background='white')
+        details_label.grid(row=0, column=0, columnspan=2, pady=5, sticky="w")
+
+        # Display Current Details
+        details_label = ttk.Label(self.display_area, text="Current Reservation Details:",
+                                  font=("Helvetica", 12, "bold"), background='white')
+        details_label.grid(row=1, column=0, columnspan=2, pady=5, sticky="w")
+
+        fields = {
+            "Name": ticket.fullname,
+            "Ticket Number": ticket.ticket_number,
+            "Seat Number": ticket.seat_number,
+            "Status": ticket.status,
+            "Booking Time": ticket.booking_time,
+        }
+
+        for i, (key, value) in enumerate(fields.items(), start=2):
+            label = ttk.Label(self.display_area, text=f"{key}: {value}", background='white')
+            label.grid(row=i, column=0, columnspan=2, pady=5, sticky="w")
+
+        # Display Modifying Contents
+        details_label = ttk.Label(self.display_area, text="Enter New Details", font=("Helvetica", 12, "bold"), background='white')
+        details_label.grid(row=len(fields) + 3, column=0, columnspan=2, pady=5, sticky="w")
+
+        # Input for New First Name
+        first_name_label = ttk.Label(self.display_area, text="New First Name:")
+        first_name_label.grid(row=len(fields) + 4, column=0, pady=5, sticky="w")
+        self.first_name_entry = ttk.Entry(self.display_area)
+        self.first_name_entry.insert(0, ticket.fullname.split(" ")[0])  # Prefill current first name
+        self.first_name_entry.grid(row=len(fields) + 4, column=1, pady=5, sticky="ew")
+
+        # Input for New Last Name
+        last_name_label = ttk.Label(self.display_area, text="New Last Name:")
+        last_name_label.grid(row=len(fields) + 5, column=0, pady=5, sticky="w")
+        self.last_name_entry = ttk.Entry(self.display_area)
+        self.last_name_entry.insert(0, ticket.fullname.split(" ")[1])  # Prefill current last name
+        self.last_name_entry.grid(row=len(fields) + 5, column=1, pady=5, sticky="ew")
+
+        # Save Button
+        save_button = ttk.Button(self.display_area, text="Save Changes", command=lambda: self.save_changes(ticket))
+        save_button.grid(row=len(fields) + 6, column=0, columnspan=2, pady=20, sticky="ew")
+
+        # Configure column weights
+        self.display_area.grid_columnconfigure(0, weight=1)
+        self.display_area.grid_columnconfigure(1, weight=1)
+
+    def save_changes(self, ticket):
+        """Save the updated details for the ticket."""
+        new_first_name = self.first_name_entry.get().strip().title() or ticket.fullname.split(" ")[0]
+        new_last_name = self.last_name_entry.get().strip().title() or ticket.fullname.split(" ")[1]
+        ticket.fullname = f"{new_first_name} {new_last_name}"
+
+        # Update the tickets file
+        self.write_to_csv()
+
+        self.clear_display_area()
+
+        # Display confirmation heading
+        confirmation_label = ttk.Label(
+            self.display_area,
+            text="Reservation Updated Successfully!",
+            font=("Helvetica", 14, "bold"),
+            foreground="green",
+            background='white'
+        )
+        confirmation_label.grid(row=0, column=0, columnspan=2, pady=10, sticky="ew")
+
+        # Display updated details heading
+        details_label = ttk.Label(
+            self.display_area,
+            text="Updated Reservation Details:",
+            font=("Helvetica", 12, "bold"),
+            background="white"
+        )
+        details_label.grid(row=1, column=0, columnspan=2, pady=5, sticky="w")
+
+        # Updated details fields
+        fields = {
+            "Name": ticket.fullname,
+            "Ticket Number": ticket.ticket_number,
+            "Seat Number": ticket.seat_number,
+            "Status": ticket.status,
+            "Booking Time": ticket.booking_time,
+        }
+
+        # Dynamically display fields
+        for idx, (label, value) in enumerate(fields.items(), start=2):
+            field_label = ttk.Label(self.display_area, text=f"{label}:", font=("Helvetica", 10, "bold"), background='white')
+            field_label.grid(row=idx, column=0, pady=5, padx=10, sticky="w")
+
+            field_value = ttk.Label(self.display_area, text=value, font=("Helvetica", 10), background='white')
+            field_value.grid(row=idx, column=1, pady=5, padx=10, sticky="w")
 
     def view_reservation(self):
         """View reservation details."""
-        self.ticket_manager.read_tickets()
+        # self.ticket_manager.read_tickets()
+        self.clear_display_area()
+
+        details_label = ttk.Label(self.display_area, text="View Reserved Ticket Details",
+                                  font=("Helvetica", 14, "bold"), background='white')
+        details_label.grid(row=0, column=0, columnspan=2, pady=5, sticky="w")
+
+        # Ticket Number Input
+        ticket_number_label = ttk.Label(self.display_area, text="Enter Ticket Number:")
+        ticket_number_label.grid(row=1, column=0, pady=5, padx=5, sticky="w")
+        self.ticket_number_entry = ttk.Entry(self.display_area)
+        self.ticket_number_entry.grid(row=1, column=1, pady=5, padx=5, sticky="ew")
+
+        # Submit Button
+        submit_button = ttk.Button(self.display_area, text="Search", command=self.search_reserved_ticket)
+        submit_button.grid(row=3, column=0, columnspan=2, pady=20, sticky="ew")
+
+        # Configure column weights for equal spacing
+        self.display_area.grid_columnconfigure(0, weight=1)
+        self.display_area.grid_columnconfigure(1, weight=1)
+
+    def display_reservation(self, ticket):
+        self.clear_display_area()
+        # Display Current Details
+        details_label = ttk.Label(self.display_area, text="Current Reservation Details:",
+                                  font=("Helvetica", 12, "bold"), background='white')
+        details_label.grid(row=0, column=0, columnspan=2, pady=5, sticky="w")
+
+        fields = {
+            "Name": ticket.fullname,
+            "Ticket Number": ticket.ticket_number,
+            "Seat Number": ticket.seat_number,
+            "Status": ticket.status,
+            "Booking Time": ticket.booking_time,
+        }
+
+        for i, (key, value) in enumerate(fields.items(), start=1):
+            label = ttk.Label(self.display_area, text=f"{key}: {value}", background='white')
+            label.grid(row=i, column=0, columnspan=2, pady=5, sticky="w")
+
+    def cancel_reservation(self):
+        """Cancel a reservation."""
+        self.clear_display_area()
+        # Display Current Details
+        details_label = ttk.Label(self.display_area, text="Cancel a Reservation",
+                                  font=("Helvetica", 12, "bold"), background='white')
+        details_label.grid(row=0, column=0, columnspan=2, pady=5, sticky="w")
+
+        # Ticket Number Input
+        ticket_number_label = ttk.Label(self.display_area, text="Enter Ticket Number:")
+        ticket_number_label.grid(row=1, column=0, pady=5, padx=5, sticky="w")
+        self.ticket_number_entry = ttk.Entry(self.display_area)
+        self.ticket_number_entry.grid(row=1, column=1, pady=5, padx=5, sticky="ew")
+
+        # Submit Button
+        submit_button = ttk.Button(self.display_area, text="Search", command=self.search_ticket_to_delete)
+        submit_button.grid(row=2, column=0, columnspan=2, pady=20, sticky="ew")
+
+        # Configure column weights for equal spacing
+        self.display_area.grid_columnconfigure(0, weight=1)
+        self.display_area.grid_columnconfigure(1, weight=1)
+
+
+        # self.update_seats_info()
+
+    def search_ticket_to_delete(self):
+        """Search for a ticket by ticket number and allow modification."""
+        ticket_number = self.ticket_number_entry.get().strip()
+
+        # Search for the ticket
+        ticket_found = None
+        for row in self.all_tickets:
+            if row.ticket_number == ticket_number:
+                ticket_found = row
+                break
+
+        if not ticket_found:
+            self.show_message(f"No ticket found with Ticket Number: {ticket_number}")
+            return
+
+        # Display current ticket details and input fields for modification
+        self.display_delete_confirm(ticket_found)
+
+
+    def display_delete_confirm(self, ticket):
+        """Display the ticket's current details and fields for modification."""
+        self.clear_display_area()
+
+        details_label = ttk.Label(self.display_area, text="Delete Ticket",
+                                  font=("Helvetica", 14, "bold"), background='white')
+        details_label.grid(row=0, column=0, columnspan=2, pady=5, sticky="w")
+
+        # Display Current Details
+        details_label = ttk.Label(self.display_area, text="Current Reservation Details:",
+                                  font=("Helvetica", 12, "bold"), background='white')
+        details_label.grid(row=1, column=0, columnspan=2, pady=5, sticky="w")
+
+        fields = {
+            "Name": ticket.fullname,
+            "Ticket Number": ticket.ticket_number,
+            "Seat Number": ticket.seat_number,
+            "Status": ticket.status,
+            "Booking Time": ticket.booking_time,
+        }
+
+        for i, (key, value) in enumerate(fields.items(), start=2):
+            label = ttk.Label(self.display_area, text=f"{key}: {value}", background='white')
+            label.grid(row=i, column=0, columnspan=2, pady=5, sticky="w")
+
+        # Display Modifying Contents
+        details_label = ttk.Label(self.display_area, text="Are you Sure You Want to Cancel This Reservation?", font=("Helvetica", 12, "bold"), background='white')
+        details_label.grid(row=len(fields) + 3, column=0, columnspan=2, pady=5, sticky="w")
+
+        # Input for New First Name
+        confirmation_label = ttk.Label(self.display_area, text="Type a YES or NO to proceed with reservation cancellation:")
+        confirmation_label.grid(row=len(fields) + 4, column=0, pady=5, sticky="w")
+        self.confirmation_entry = ttk.Entry(self.display_area)
+        self.confirmation_entry.grid(row=len(fields) + 4, column=1, pady=5, sticky="ew")
+
+        # Save Button
+        save_button = ttk.Button(self.display_area, text="Save Changes", command=lambda: self.delete_changes(ticket))
+        save_button.grid(row=len(fields) + 6, column=0, columnspan=2, pady=20, sticky="ew")
+
+        # Configure column weights
+        self.display_area.grid_columnconfigure(0, weight=1)
+        self.display_area.grid_columnconfigure(1, weight=1)
+
+    def delete_changes(self):
+
+
 
     def view_seat_mapping(self):
         """View seat mapping."""
@@ -279,10 +605,10 @@ class WelcomeGUI:
         display_width = self.display_area.winfo_width()
 
         # Set a wraplength that is 80% of the display area's width (or a fixed value)
-        wraplength = display_width * 0.8 if display_width > 0 else 500  # default wraplength if display_width is not yet available
+        wraplength = display_width * 0.85 if display_width > 0 else 600  # default wraplength if display_width is not yet available
 
         # Create the new message label with wrapping
-        self.current_message_label = ttk.Label(self.display_area, text=message, font=("Helvetica", 12), wraplength=wraplength)
+        self.current_message_label = ttk.Label(self.display_area, text=message, font=("Helvetica", 12), wraplength=wraplength, background='white')
         self.current_message_label.grid(row=self.display_area.grid_size()[1], column=0, columnspan=2, sticky="w", pady=10, padx=10)
 
     def exit_system(self):

@@ -200,9 +200,9 @@ class Ticketing:
                 print('\nEnter new details or Press Enter to keep the current details.\n')
 
                 # Get new details from user or retain current details
-                new_first_name = input(f'Enter Your First Name [{row.fullname.split(" ")[0]}]: ').strip().title() or \
+                new_first_name = input(f'New First Name [{row.fullname.split(" ")[0]}]: ').strip().title() or \
                                  row.fullname.split(" ")[0]
-                new_last_name = input(f'Enter Your Last Name [{row.fullname.split(" ")[1]}]: ').strip().title() or \
+                new_last_name = input(f'New Last Name [{row.fullname.split(" ")[1]}]: ').strip().title() or \
                                 row.fullname.split(" ")[1]
                 row.fullname = f"{new_first_name} {new_last_name}"
 
