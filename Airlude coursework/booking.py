@@ -2,6 +2,9 @@ import csv
 from datetime import datetime
 from ticketconfig import TicketConfig
 from ticketconfig import CancelledTicketConfig
+from api import CSVQuery
+
+
 import random
 
 TICKETS_FILE = 'flight_db.csv'
@@ -9,41 +12,20 @@ CANCELLED_TICKETS = "cancelled_tickets.csv"
 
 class Ticketing:
     def __init__(self):
-        self.all_tickets = self.query_tickets()
-        # self.all_cancelled_tickets = self.query_cancelled_tickets()
+        self.csv_query_instance = CSVQuery()
+        self.all_tickets = CSVQuery().query_tickets()
+        self.all_cancelled_tickets = CSVQuery().query_cancelled_tickets()
         self.config_ticket = TicketConfig
         self.cancelled_ticket_config = CancelledTicketConfig
-        self.counter = len([ticket for ticket in self.all_tickets if ticket.status == 'Active'])
         self.time = datetime.now().strftime('%d-%m-%Y %H:%M:%S')
-        self.all_cancelled_tickets = []
+        # self.all_cancelled_tickets = []
+        self.counter = len([ticket for ticket in self.all_tickets if ticket.status == 'Active'])
+        self.delete = self.delete = lambda: self.csv_query_instance.write_to_cancelled_csv(self.all_cancelled_tickets)
+        self.write = lambda: self.csv_query_instance.write_to_csv(self.all_tickets)
+        self.customer_id = self.customer_id()
 
-    def query_tickets(self):
-        all_tickets = []
-        try:
-            with open(TICKETS_FILE, mode='r') as records:
-                parse = csv.DictReader(records)
-                all_tickets = [TicketConfig.payload_unwrapper(row) for row in parse]
-        except FileNotFoundError:
-            with open(TICKETS_FILE, mode='w', newline='') as record:
-                writer = csv.DictWriter(record, fieldnames=['customer_id', 'fullname', 'ticket_number', 'seat_number', 'booking_time', 'status', 'window_seat'])
-                writer.writeheader()
-            print('No record found!')
-        return all_tickets
 
-    def query_cancelled_tickets(self):
-        all_cancelled_tickets = []
-        try:
-            with open(CANCELLED_TICKETS, mode='r') as records:
-                parse = csv.DictReader(records)
-                all_cancelled_tickets = [CancelledTicketConfig.payload_unwrapper_2(row) for row in parse]
-        except FileNotFoundError:
-            with open(CANCELLED_TICKETS, mode='w', newline='') as record:
-                writer = csv.DictWriter(record, fieldnames=["customer_id", "fullname", "ticket_number", "seat_number", "booking_time", "status", "window_seat", "cancelled_date"])
-                writer.writeheader()
-            print('No record found!')
-        return all_cancelled_tickets
-
-    def assign_seat_number(self):
+    def assign_seat_numbe(self):
         while True:
             # Calculate the next seat number
             next_seat_number = len([ticket for ticket in self.all_tickets if ticket.status == 'Active']) + 1
@@ -53,6 +35,29 @@ class Ticketing:
             else:
                 print(f"Assigned Seat Number: {next_seat_number}")
                 return next_seat_number
+
+    def assign_seat_number(self):
+        """Assign a seat number by checking for taken seats and filling in any gaps."""
+        # List of taken seat numbers
+        taken_seats = [int(ticket.seat_number) for ticket in self.all_tickets if ticket.status == 'Active']
+
+        # Find the smallest missing seat number
+        next_seat_number = 1  # Start with seat number 1
+        while next_seat_number in taken_seats:
+            next_seat_number += 1  # Increment to find the next available seat
+
+        # If any seat number is skipped, find the first missing number
+        missing_seats = sorted(set(range(1, next_seat_number)) - set(taken_seats))
+        if missing_seats:
+            next_seat_number = missing_seats[0]  # Assign the first missing seat number
+
+        # Check and assign the next available seat number
+        if any(ticket.seat_number == str(next_seat_number) for ticket in self.all_tickets):
+            print(f"Seat Number {next_seat_number} is already taken. Checking for the next available seat...")
+            next_seat_number = len([ticket for ticket in self.all_tickets if ticket.status == 'Active']) + 1
+            # A recursive or additional logic to find the next available seat
+
+        return next_seat_number
 
     @classmethod
     def customer_id(cls):
@@ -66,27 +71,7 @@ class Ticketing:
         # Create a string of 5 random numbers in the range 0-4
         return ''.join(str(random.randint(0, 4)) for _ in range(5))
 
-    def write_to_csv(self):
-        with open(TICKETS_FILE, mode='w', newline='') as record:
-            writer = csv.DictWriter(record, fieldnames=['customer_id', 'fullname', 'ticket_number', 'seat_number', 'booking_time', 'status', 'window_seat'])
-            writer.writeheader()
-            for ticket in self.all_tickets:
-                writer.writerow(ticket.prep_payload())
-            record.flush()
-        self.all_tickets = self.query_tickets()
 
-    def write_to_cancelled_csv(self):
-        if not hasattr(self, 'all_cancelled_tickets'):
-            self.all_cancelled_tickets = []  # Initialize the list if it doesn't exist
-
-        with open(CANCELLED_TICKETS, mode='w', newline='') as record:
-            writer = csv.DictWriter(record, fieldnames=['customer_id', 'fullname', 'ticket_number', 'seat_number', 'booking_time', 'status', 'window_seat', 'cancelled_date'])
-            writer.writeheader()
-            for ticket in self.all_cancelled_tickets:
-                if isinstance(ticket, CancelledTicketConfig):  # Ensure correct type
-                    writer.writerow(ticket.cancelled_ticket_payload())
-                else:
-                    print(f"Skipped invalid object in cancelled tickets: {ticket}")
 
     def get_valid_name(self, prompt):
         while True:
@@ -104,23 +89,36 @@ class Ticketing:
         if len([ticket for ticket in self.all_tickets if ticket.status == "Active"]) >= 100:
             print('All seats are booked! \nNo more empty seats available!')
             return None
-        first_name = self.get_valid_name("Enter Your First Name: ")
-        last_name = self.get_valid_name("Enter Your Last Name: ")
-        fullname = f"{first_name} {last_name}"
 
-        ticket_number = f'{self.customer_id()}-{self.booking_id()}'
-        customer_id = self.customer_id()
+
+        first_name_input = self.get_valid_name("Enter Your First Name: ")
+        last_name_input = self.get_valid_name("Enter Your Last Name: ")
+        fullname_combined = f"{first_name_input} {last_name_input}"
+
+        generated_ticket_number = f'{self.customer_id}-{self.booking_id()}'
+        customer_id = self.customer_id
         seat_number = self.assign_seat_number()
-        window_seat = str(seat_number % 3 == 1)
+
+        def window_seat_checker(seat_number):
+            """Check if a given seat number is a window seat."""
+            # Window seats are every 3rd seat starting from 1 (1, 4, 7, ...)
+            if (seat_number - 1) % 3 == 0:  # Check if seat_number is 1 mod 3
+                return "This is a Window seat"
+            else:
+                return "Not a Window Seat"
+
+        window_seat = window_seat_checker(seat_number)
         booking_time = self.time
         status = 'Active'.title()
 
-        my_ticket = self.config_ticket(customer_id, fullname, ticket_number, seat_number, booking_time, status, window_seat)
+
+
+        my_ticket = self.config_ticket(customer_id, fullname_combined, generated_ticket_number, seat_number, booking_time, status, window_seat)
         frontend_payload = my_ticket.prep_payload()
-        display_payload = f'\nName: {frontend_payload["fullname"]} \nTicket Number: {frontend_payload["ticket_number"]} \nSeat Number: {frontend_payload["seat_number"]} \nWindow Seat: {frontend_payload["window_seat"]}'
+        display_payload = f'\nName: {frontend_payload["fullname"]} \nTicket Number: {frontend_payload["ticket_number"]} \nSeat Number: {frontend_payload["seat_number"]} \nWindow Seat: {frontend_payload["window_seat"]} \nBooking Time: {frontend_payload["booking_time"]}'
         self.all_tickets.append(my_ticket)
-        self.write_to_csv()
-        print(f'\nHello {list(fullname.split(" "))[0]}! \nYour flight ticket with the following details has been booked successfully!: \n{display_payload}')
+        self.write()
+        print(f'\nHello {list(fullname_combined.split(" "))[0]}! \nYour flight ticket with the following details has been booked successfully!: \n{display_payload}')
         print(f'\nSeats remaining: {100 - len([ticket for ticket in self.all_tickets if ticket.status == "Active"])}')
         return
 
@@ -128,11 +126,9 @@ class Ticketing:
         booked_ticket_number = input('Enter Your Ticket Number: ')
         for row in self.all_tickets:
             if row.ticket_number == booked_ticket_number:
-                print(f'\nCurrent reservation details:\nName: {row.fullname} \nTicket Number: {row.ticket_number} \nSeat Number: {row.seat_number}\nTicket Status: {row.status}\nBooking Time: {row.booking_time} ')
-                confirm_del = input('\nProceed to Main Menu | Yes/No:').strip().upper()
-                if confirm_del == 'YES':
-                    return
-        print(f'No ticket found with Ticket Number: {booked_ticket_number}')
+                print(f'\nCurrent reservation details:\n\nName: {row.fullname} \nTicket Number: {row.ticket_number} \nSeat Number: {row.seat_number}\nTicket Status: {row.status}\nBooking Time: {row.booking_time} ')
+            else:
+                print(f'No ticket found with Ticket Number: {booked_ticket_number}')
 
     def del_tickets(self):
         booked_ticket_number = input('Enter Your Ticket Number: ').strip()
@@ -157,8 +153,8 @@ class Ticketing:
                     self.all_cancelled_tickets.append(cancelled_ticket)
 
                     self.all_tickets.remove(row)
-                    self.write_to_csv()
-                    self.write_to_cancelled_csv()
+                    self.write()
+                    self.delete()
                     print(f'Reservation for Ticket Number: {booked_ticket_number} has been cancelled!')
                     print(f'\nSeats remaining: {100 - len([ticket for ticket in self.all_tickets if ticket.status == "Active"])}')
                     return
@@ -191,7 +187,7 @@ class Ticketing:
                 row.fullname = f"{new_first_name} {new_last_name}"
 
                 # Update the tickets file
-                self.write_to_csv()
+                self.write()
 
                 print(f'Reservation for Ticket Number: {booked_ticket_number} has been updated!')
                 break  # Exit the loop after finding and updating the ticket
@@ -199,25 +195,33 @@ class Ticketing:
         if not ticket_found:
             print(f'No ticket found with Ticket Number: {booked_ticket_number}')
 
-    def display_seating(self, total_seats=101, seats_per_row=3):
+    def display_seating(self, total_seats=100, seats_per_row=3):
         print("\nAircraft Seating Chart")
         print("=" * (seats_per_row * 5 + 6))
+        print("w - represents window seat\n")
 
-        # Get the list of seat numbers for booked seats
         booked_seats = [int(ticket.seat_number) for ticket in self.all_tickets if ticket.status == 'Active']
 
-        seat_number = 1  # Start seat numbering
+        seat_number = 1
 
 
-        # Loop through rows
+
         for row in range(1, (total_seats // seats_per_row) + 2):
             row_display = []
             for seat in range(seats_per_row):
                 # Check if the seat is booked
+                is_window_seat = seat_number % seats_per_row == 1
+
                 if seat_number in booked_seats:
-                    row_display.append(" x ")
+                    if is_window_seat:
+                        row_display.append(" x-w")
+                    else:
+                        row_display.append(" x ")
                 else:
-                    row_display.append(f"{seat_number:2} ")
+                    if is_window_seat:
+                        row_display.append(f"{seat_number:2}-w")
+                    else:
+                        row_display.append(f"{seat_number:2} ")
                 seat_number += 1
 
                 # Stop when the total seats are exhausted

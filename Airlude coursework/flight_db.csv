@@ -1,6 +1,5 @@
 customer_id,fullname,ticket_number,seat_number,booking_time,status,window_seat
-243,Fdsdfds Cxccxv,110-00231,1,25-11-2024 11:30:28,Active,True
-020,Cxsfdsffegvfg Dffssd,033-43234,2,25-11-2024 11:30:28,Active,False
-001,Vscvdssgg Scxcvfd,314-01331,3,25-11-2024 11:30:28,Active,False
-423,Vfvdgfdvg Csdsffsf,002-41240,4,25-11-2024 11:30:28,Active,True
-333,Sdfsfd Cxzzxc,342-43440,5,25-11-2024 11:30:28,Active,False
+411,Innocent Son,411-40430,1,25-11-2024 15:59:26,Active,This is a Window seat
+143,Rahama Adua,143-14002,3,25-11-2024 16:04:16,Active,Not a Window Seat
+143,Yesu Rahama,143-02324,4,25-11-2024 16:04:16,Active,This is a Window seat
+402,Try Booking,402-03134,2,25-11-2024 16:06:21,Active,Not a Window Seat

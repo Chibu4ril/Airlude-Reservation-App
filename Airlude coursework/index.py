@@ -13,13 +13,14 @@ class Welcome:
         self.choice = choice
 
 
-
+    # This method lists out the available options for users to make a selection
     def menu(self):
         menu_items = ['1 - Book a Reservation', '2 - View a Reservation Details', '3 - Modify a Reservation', '4 - Cancel a Reservation', '5 - View Seat Mapping', '6 - Exit']
         for item in menu_items:
             print(f'✈ {item} ')
         print('')
 
+        # An error try catch to make sure users enter the right input
         try:
             self.choice = int(input('Enter a selection from 1-6: ').strip())
             if self.choice < 1 or self.choice > 6:
@@ -29,6 +30,7 @@ class Welcome:
             print("Invalid input. Please enter a valid number.")
             self.main()
 
+        # conditions to check for the right input selected and running of the right function
         if self.choice  == 1:
             print(menu_items[0] + ' - SELECTED \n')
             self.create_ticket.book_seat()
@@ -70,7 +72,7 @@ class Welcome:
 
 
 
-# ========================= Initializer ==================
+# ========================= Program Initiation  ==================
 if __name__ == "__main__":
     start = Welcome()
     start.main()

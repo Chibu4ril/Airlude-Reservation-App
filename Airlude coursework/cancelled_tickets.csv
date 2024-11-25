@@ -1,2 +1,3 @@
 customer_id,fullname,ticket_number,seat_number,booking_time,status,window_seat,cancelled_date
-016,Hdhgfgdshf Nbdnbsbnf,156-34554,3,21-11-2024 02:50:06,Cancelled,False,24-11-2024 15:00:47
+344,Innocent Ghyu,344-02230,1,25-11-2024 15:42:29,Cancelled,This is a Window seat,25-11-2024 15:59:11
+210,Tryr Hghdh,210-32111,2,25-11-2024 15:59:58,Cancelled,This is a Window seat,25-11-2024 16:05:57
