@@ -22,9 +22,6 @@ class WelcomeGUI:
         self.customer_id = self.customer_id()
         self.all_cancelled_tickets = []
 
-
-
-
         # Ticketing logic
         self.ticket_manager = Ticketing()
         self.total_seats = 100
@@ -130,6 +127,11 @@ class WelcomeGUI:
 
         self.display_area = tk.Frame(self.right_frame, bg="white")
         self.display_area.pack(fill="both", expand=True, padx=10, pady=10)
+
+        default_text = ["CSC-40044 System Design & Programming", "Course Work", "By Innocent Onyenonachi"]
+        for i, text in enumerate(default_text):
+            label = tk.Label(self.display_area, text=text, font=("Arial", 12), bg="white", anchor="center")
+            label.grid(row=i, column=0, padx=20, pady=2, sticky="ew")
 
         self.root.grid_columnconfigure(1, weight=1)
         self.root.grid_rowconfigure(0, weight=1)
@@ -254,7 +256,15 @@ class WelcomeGUI:
         fullname = f"{first_name.title()} {last_name.title()}"
         ticket_number = f'{self.customer_id}-{self.booking_id()}'
         seat_number = self.assign_seat_number()
-        window_seat = str(seat_number % 2 == 0)  # For window seat validation
+
+        def window_seat_checker(seat_number):
+            # Check if a given seat number is a window seat.
+            if (seat_number - 1) % 3 == 0:
+                return "This is a Window seat"
+            else:
+                return "Not a Window Seat"
+
+        window_seat = window_seat_checker(seat_number)
         booking_time = self.time
         status = 'Active'.title()
 
@@ -292,6 +302,7 @@ class WelcomeGUI:
         self.first_name_entry.delete(0, tk.END)
         self.last_name_entry.delete(0, tk.END)
 
+    # =================Edit Ticket=====================================
     def modify_reservation(self):
         """Modify an existing reservation."""
         self.clear_display_area()
@@ -332,50 +343,6 @@ class WelcomeGUI:
 
         # Display current ticket details and input fields for modification
         self.display_edit_form(ticket_found)
-
-
-    def search_reserved_ticket(self):
-        """Search for a ticket by ticket number and allow modification."""
-        ticket_number = self.ticket_number_entry.get().strip()
-
-        # Search for the ticket
-        ticket_found = None
-        for row in self.all_tickets:
-            if row.ticket_number == ticket_number:
-                ticket_found = row
-                break
-
-        if not ticket_found:
-            self.show_message(f"No ticket found with Ticket Number: {ticket_number}")
-            return
-
-        # Display current ticket details and input fields for modification
-        self.display_details(ticket_found)
-
-    def display_details(self, ticket):
-        self.clear_display_area()
-
-        details_label = ttk.Label(self.display_area, text="View Reserved Ticket",
-                                  font=("Helvetica", 14, "bold"), background='white')
-        details_label.grid(row=0, column=0, columnspan=2, pady=5, sticky="w")
-
-        # Display Current Details
-        details_label = ttk.Label(self.display_area, text="Current Reservation Details:",
-                                  font=("Helvetica", 12, "bold"), background='white')
-        details_label.grid(row=1, column=0, columnspan=2, pady=5, sticky="w")
-
-        fields = {
-            "Name": ticket.fullname,
-            "Ticket Number": ticket.ticket_number,
-            "Seat Number": ticket.seat_number,
-            "Status": ticket.status,
-            "Booking Time": ticket.booking_time,
-        }
-
-        for i, (key, value) in enumerate(fields.items(), start=2):
-            label = ttk.Label(self.display_area, text=f"{key}: {value}", background='white')
-            label.grid(row=i, column=0, columnspan=2, pady=5, sticky="w")
-
 
     def display_edit_form(self, ticket):
         """Display the ticket's current details and fields for modification."""
@@ -475,9 +442,54 @@ class WelcomeGUI:
             field_value = ttk.Label(self.display_area, text=value, font=("Helvetica", 10), background='white')
             field_value.grid(row=idx, column=1, pady=5, padx=10, sticky="w")
 
+    def search_reserved_ticket(self):
+        """Search for a ticket by ticket number and allow modification."""
+        ticket_number = self.ticket_number_entry.get().strip()
+
+        # Search for the ticket
+        ticket_found = None
+        for row in self.all_tickets:
+            if row.ticket_number == ticket_number:
+                ticket_found = row
+                break
+
+        if not ticket_found:
+            self.show_message(f"No ticket found with Ticket Number: {ticket_number}")
+            return
+
+        # Display current ticket details and input fields for modification
+        self.display_details(ticket_found)
+
+    def display_details(self, ticket):
+        self.clear_display_area()
+
+        details_label = ttk.Label(self.display_area, text="View Reserved Ticket",
+                                  font=("Helvetica", 14, "bold"), background='white')
+        details_label.grid(row=0, column=0, columnspan=2, pady=5, sticky="w")
+
+        # Display Current Details
+        details_label = ttk.Label(self.display_area, text="Current Reservation Details:",
+                                  font=("Helvetica", 12, "bold"), background='white')
+        details_label.grid(row=1, column=0, columnspan=2, pady=5, sticky="w")
+
+        fields = {
+            "Name": ticket.fullname,
+            "Ticket Number": ticket.ticket_number,
+            "Seat Number": ticket.seat_number,
+            "Status": ticket.status,
+            "Booking Time": ticket.booking_time,
+        }
+
+        for i, (key, value) in enumerate(fields.items(), start=2):
+            label = ttk.Label(self.display_area, text=f"{key}: {value}", background='white')
+            label.grid(row=i, column=0, columnspan=2, pady=5, sticky="w")
+
+
+
+
+
     def view_reservation(self):
         """View reservation details."""
-        # self.ticket_manager.read_tickets()
         self.clear_display_area()
 
         details_label = ttk.Label(self.display_area, text="View Reserved Ticket Details",
@@ -691,38 +703,31 @@ class WelcomeGUI:
                                               background="green", foreground="white",
                                               font=("Helvetica", 10, "bold"), borderwidth=1, relief="solid")
 
-                # Place the seat in the grid
                 seat_label.grid(row=row_index, column=seat, padx=2, pady=2, sticky="nsew")
 
-                # Increment the seat number
                 seat_number += 1
 
-            # Move to the next row
             row_index += 1
 
         # Adjust the grid to scale with the display area
         for col in range(seats_per_row):
-            self.display_area.grid_columnconfigure(col, weight=1)  # Make columns equal width
+            self.display_area.grid_columnconfigure(col, weight=1)
 
         # Configure rows to use space efficiently
-        self.display_area.grid_rowconfigure(0, weight=0)  # Title row fixed
+        self.display_area.grid_rowconfigure(0, weight=0)
         for row in range(1, row_index):
-            self.display_area.grid_rowconfigure(row, weight=1)  # Allow rows to stretch to fit space
+            self.display_area.grid_rowconfigure(row, weight=1)
 
 
 
     def show_message(self, message):
-        """Display a message by replacing any existing message in the display area."""
-
         # Check if a message label already exists and remove it
         if hasattr(self, 'current_message_label') and self.current_message_label.winfo_exists():
             self.current_message_label.destroy()
 
-        # Get the width of the display area for the wraplength (max width for wrapping)
         display_width = self.display_area.winfo_width()
 
-        # Set a wraplength that is 80% of the display area's width (or a fixed value)
-        wraplength = display_width * 0.85 if display_width > 0 else 600  # default wraplength if display_width is not yet available
+        wraplength = display_width * 0.85 if display_width > 0 else 600
 
         # Create the new message label with wrapping
         self.current_message_label = ttk.Label(self.display_area, text=message, font=("Helvetica", 12), wraplength=wraplength, background='white')

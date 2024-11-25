@@ -10,12 +10,7 @@ CANCELLED_TICKETS = 'deleted_gui_flight_db.csv'
 class Ticketing:
     def __init__(self):
         self.all_tickets = self.query_tickets()
-        # self.all_cancelled_tickets = self# .query_cancelled_tickets()
-        self.config_ticket = TicketConfig
-        self.cancelled_ticket_config = CancelledTicketConfig
-        self.counter = len([ticket for ticket in self.all_tickets if ticket.status == 'Active'])
-        self.time = datetime.now().strftime('%d-%m-%Y %H:%M:%S')
-        self.all_cancelled_tickets = []
+
 
     def query_tickets(self):
         all_tickets = []
