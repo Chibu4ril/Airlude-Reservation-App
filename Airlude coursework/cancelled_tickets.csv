@@ -1,3 +1,2 @@
 customer_id,fullname,ticket_number,seat_number,booking_time,status,window_seat,cancelled_date
-344,Innocent Ghyu,344-02230,1,25-11-2024 15:42:29,Cancelled,This is a Window seat,25-11-2024 15:59:11
-210,Tryr Hghdh,210-32111,2,25-11-2024 15:59:58,Cancelled,This is a Window seat,25-11-2024 16:05:57
+213,Wizzy Noni,213-04020,1,25-11-2024 19:22:25,Cancelled,This is a Window seat,25-11-2024 19:24:05

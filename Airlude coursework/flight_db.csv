@@ -1,8 +1,1 @@
 customer_id,fullname,ticket_number,seat_number,booking_time,status,window_seat
-411,Innocent Son,411-40430,1,25-11-2024 15:59:26,Active,This is a Window seat
-143,Rahama Adua,143-14002,3,25-11-2024 16:04:16,Active,Not a Window Seat
-143,Yesu Rahama,143-02324,4,25-11-2024 16:04:16,Active,This is a Window seat
-402,Try Booking,402-03134,2,25-11-2024 16:06:21,Active,Not a Window Seat
-321,Hello John,321-23334,5,25-11-2024 16:19:35,Active,Not a Window Seat
-304,Try New,304-03313,6,25-11-2024 16:20:28,Active,Not a Window Seat
-104,Echj Nomiy,104-42332,7,25-11-2024 16:36:43,Active,This is a Window seat

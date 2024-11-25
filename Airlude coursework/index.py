@@ -1,7 +1,6 @@
 from booking import Ticketing
 
 # Starting class for the Airline Ticket Reservation System
-
 class Welcome:
     def __init__(self):
         # Initialized with a Ticketing instance and also set the total expected maximumn number of seats to 100

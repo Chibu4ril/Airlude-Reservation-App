@@ -120,12 +120,15 @@ class Ticketing:
 
     def read_tickets(self):
         # View the details of a booked ticket by entering the ticket number.
-        booked_ticket_number = input('Enter Your Ticket Number: ')
+        booked_ticket_number = input('Enter Your Ticket Number: ').strip()
+        ticket_found = False
         for row in self.all_tickets:
             if row.ticket_number == booked_ticket_number:
+                ticket_found = True
                 print(f'\nCurrent reservation details:\n\nName: {row.fullname} \nTicket Number: {row.ticket_number} \nSeat Number: {row.seat_number}\nTicket Status: {row.status}\nBooking Time: {row.booking_time} ')
-            else:
-                print(f'No ticket found with Ticket Number: {booked_ticket_number}')
+            break
+        if not ticket_found:
+            print(f'No ticket found with Ticket Number: {booked_ticket_number}')
 
     def del_tickets(self):
         # Cancel an existing ticket by entering the ticket number.
