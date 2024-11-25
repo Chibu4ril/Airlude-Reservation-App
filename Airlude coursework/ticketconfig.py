@@ -1,7 +1,10 @@
-from datetime import datetime
+
+
+# TicketConfig class handles the creation and manipulation of active ticket details.
 
 class TicketConfig:
     def __init__(self, customer_id, fullname, ticket_number, seat_number, booking_time, status, window_seat):
+        # Initialize the ticket props
         self.customer_id = customer_id
         self.fullname = fullname
         self.ticket_number = ticket_number
@@ -10,13 +13,14 @@ class TicketConfig:
         self.status = status
         self.window_seat = window_seat
 
-
+    # Prepares the ticket's props as a dictionary for easy access or storage
     def prep_payload(self):
         payload = { "customer_id" : self.customer_id , 'fullname': self.fullname, 'ticket_number' : self.ticket_number, 'seat_number':self.seat_number, 'booking_time':self.booking_time, 'status': self.status, 'window_seat' :self.window_seat }
         return payload
 
     @classmethod
     def payload_unwrapper(cls, data):
+        # Converts a dictionary back into a TicketConfig object
         new_payload = cls(
             customer_id = data["customer_id"],
             fullname = data['fullname'],
@@ -28,6 +32,9 @@ class TicketConfig:
         )
         return new_payload
 
+
+
+# CancelledTicketConfig handles the ticket details specifically for cancelled reservations.
 class CancelledTicketConfig:
     def __init__(self, customer_id, fullname, ticket_number, seat_number, booking_time, status, window_seat, cancelled_date):
         self.customer_id = customer_id

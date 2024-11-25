@@ -3,53 +3,50 @@ from datetime import datetime
 from ticketconfig import TicketConfig
 from ticketconfig import CancelledTicketConfig
 from api import CSVQuery
-
-
 import random
 
 TICKETS_FILE = 'flight_db.csv'
 CANCELLED_TICKETS = "cancelled_tickets.csv"
 
 class Ticketing:
+    """
+    Handles the ticketing operations including booking, editing, cancellation,
+    and displaying seating arrangements for an airline reservation system.
+    """
     def __init__(self):
+        # Load ticket data from CSV
         self.csv_query_instance = CSVQuery()
         self.all_tickets = CSVQuery().query_tickets()
         self.all_cancelled_tickets = CSVQuery().query_cancelled_tickets()
+
+        # Ticket configuration and initialization
         self.config_ticket = TicketConfig
         self.cancelled_ticket_config = CancelledTicketConfig
         self.time = datetime.now().strftime('%d-%m-%Y %H:%M:%S')
-        # self.all_cancelled_tickets = []
+
+        # Count active tickets
         self.counter = len([ticket for ticket in self.all_tickets if ticket.status == 'Active'])
+
+        # Define lambda methods for writing updates to CSV
         self.delete = self.delete = lambda: self.csv_query_instance.write_to_cancelled_csv(self.all_cancelled_tickets)
         self.write = lambda: self.csv_query_instance.write_to_csv(self.all_tickets)
+
+        # Generate unique customer ID
         self.customer_id = self.customer_id()
 
-
-    def assign_seat_numbe(self):
-        while True:
-            # Calculate the next seat number
-            next_seat_number = len([ticket for ticket in self.all_tickets if ticket.status == 'Active']) + 1
-            # Check if the seat number already exists
-            if any(ticket.seat_number == str(next_seat_number) for ticket in self.all_tickets):
-                print(f"Seat Number {next_seat_number} already exists. Trying the next seat number...")
-            else:
-                print(f"Assigned Seat Number: {next_seat_number}")
-                return next_seat_number
-
     def assign_seat_number(self):
-        """Assign a seat number by checking for taken seats and filling in any gaps."""
-        # List of taken seat numbers
+        # Assign a seat number by checking for taken seats and filling up any gaps.
+
         taken_seats = [int(ticket.seat_number) for ticket in self.all_tickets if ticket.status == 'Active']
 
-        # Find the smallest missing seat number
-        next_seat_number = 1  # Start with seat number 1
+        next_seat_number = 1
         while next_seat_number in taken_seats:
-            next_seat_number += 1  # Increment to find the next available seat
+            next_seat_number += 1
 
         # If any seat number is skipped, find the first missing number
         missing_seats = sorted(set(range(1, next_seat_number)) - set(taken_seats))
         if missing_seats:
-            next_seat_number = missing_seats[0]  # Assign the first missing seat number
+            next_seat_number = missing_seats[0]
 
         # Check and assign the next available seat number
         if any(ticket.seat_number == str(next_seat_number) for ticket in self.all_tickets):
@@ -71,8 +68,7 @@ class Ticketing:
         # Create a string of 5 random numbers in the range 0-4
         return ''.join(str(random.randint(0, 4)) for _ in range(5))
 
-
-
+    # this method validates the name input to ensure it has at least 3 characters and contains no numbers or special characters.
     def get_valid_name(self, prompt):
         while True:
             name = input(prompt).strip().title()
@@ -86,6 +82,7 @@ class Ticketing:
                 return name
 
     def book_seat(self):
+        # Book a new seat for a passenger.
         if len([ticket for ticket in self.all_tickets if ticket.status == "Active"]) >= 100:
             print('All seats are booked! \nNo more empty seats available!')
             return None
@@ -100,9 +97,8 @@ class Ticketing:
         seat_number = self.assign_seat_number()
 
         def window_seat_checker(seat_number):
-            """Check if a given seat number is a window seat."""
-            # Window seats are every 3rd seat starting from 1 (1, 4, 7, ...)
-            if (seat_number - 1) % 3 == 0:  # Check if seat_number is 1 mod 3
+            # Check if a given seat number is a window seat.
+            if (seat_number - 1) % 3 == 0:
                 return "This is a Window seat"
             else:
                 return "Not a Window Seat"
@@ -123,6 +119,7 @@ class Ticketing:
         return
 
     def read_tickets(self):
+        # View the details of a booked ticket by entering the ticket number.
         booked_ticket_number = input('Enter Your Ticket Number: ')
         for row in self.all_tickets:
             if row.ticket_number == booked_ticket_number:
@@ -131,6 +128,8 @@ class Ticketing:
                 print(f'No ticket found with Ticket Number: {booked_ticket_number}')
 
     def del_tickets(self):
+        # Cancel an existing ticket by entering the ticket number.
+        # Moves the ticket from active tickets to cancelled tickets.
         booked_ticket_number = input('Enter Your Ticket Number: ').strip()
         for row in self.all_tickets:
             if row.ticket_number == booked_ticket_number:
@@ -165,8 +164,8 @@ class Ticketing:
 
 
     def edit_ticket(self):
+        # Edit passenger details of an existing ticket by entering the ticket number.
         booked_ticket_number = input('Enter Your Ticket Number: ').strip()
-        # Flag to check if the ticket is found
         ticket_found = False
         for row in self.all_tickets:
             if row.ticket_number == booked_ticket_number:
@@ -186,17 +185,18 @@ class Ticketing:
                                 row.fullname.split(" ")[1]
                 row.fullname = f"{new_first_name} {new_last_name}"
 
-                # Update the tickets file
                 self.write()
 
                 print(f'Reservation for Ticket Number: {booked_ticket_number} has been updated!')
-                break  # Exit the loop after finding and updating the ticket
+                break
 
         if not ticket_found:
             print(f'No ticket found with Ticket Number: {booked_ticket_number}')
 
     def display_seating(self, total_seats=100, seats_per_row=3):
-        print("\nAircraft Seating Chart")
+        # Display the seating arrangement of the aircraft.
+        # Shows booked and available seats along with window seat indicators.
+        print("\nAircraft Seats")
         print("=" * (seats_per_row * 5 + 6))
         print("w - represents window seat\n")
 
@@ -204,12 +204,9 @@ class Ticketing:
 
         seat_number = 1
 
-
-
         for row in range(1, (total_seats // seats_per_row) + 2):
             row_display = []
             for seat in range(seats_per_row):
-                # Check if the seat is booked
                 is_window_seat = seat_number % seats_per_row == 1
 
                 if seat_number in booked_seats:
@@ -224,11 +221,8 @@ class Ticketing:
                         row_display.append(f"{seat_number:2} ")
                 seat_number += 1
 
-                # Stop when the total seats are exhausted
                 if seat_number > total_seats:
                     break
-
-            # Print the row
             print(" | ".join(row_display))
 
         print("=" * (seats_per_row * 5 + 6))

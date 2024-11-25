@@ -5,18 +5,16 @@ from ticketconfig import CancelledTicketConfig
 TICKETS_FILE = 'flight_db.csv'
 CANCELLED_TICKETS = "cancelled_tickets.csv"
 
-
+#  class to handle reading and writing ticket and cancelled ticket data from/to CSV files.
 class CSVQuery:
     def __init__(self):
+        # Initialize the CSVQuery class.
+        # Queries both active tickets and cancelled tickets from their respective CSV files and stores them as instance variables.
         self.all_tickets = self.query_tickets()
         self.all_cancelled_tickets = self.query_cancelled_tickets()
 
     def query_tickets(self):
-        """
-        Reads ticket data from a CSV file and returns a list of ticket objects.
-        If the file doesn't exist, it creates a new file with headers and returns an empty list.
-        If the file exists, it converts each row into a ticket object using TicketConfig.payload_unwrapper(row).
-        """
+        # Reads ticket data from the TICKETS_FILE (flight_db.csv).
         all_tickets = []
         try:
             with open(TICKETS_FILE, mode='r') as records:
@@ -30,6 +28,7 @@ class CSVQuery:
         return all_tickets
 
     def query_cancelled_tickets(self):
+        # Reads cancelled ticket data from the CANCELLED_TICKETS file (cancelled_tickets.csv).
         all_cancelled_tickets = []
         try:
             with open(CANCELLED_TICKETS, mode='r') as records:
@@ -41,7 +40,8 @@ class CSVQuery:
         return all_cancelled_tickets
 
     def write_to_csv(self, tickets):
-        """Write ticket data to the CSV file."""
+        # Writes the list of active ticket data to the TICKETS_FILE.
+        # - Converts each ticket object to a dictionary/JSON using `ticket.prep_payload()
         with open(TICKETS_FILE, mode='w', newline='') as record:
             writer = csv.DictWriter(record, fieldnames=['customer_id', 'fullname', 'ticket_number', 'seat_number', 'booking_time', 'status', 'window_seat']
             )
@@ -52,7 +52,9 @@ class CSVQuery:
         return
 
     def write_to_cancelled_csv(self, cancelled_tickets):
-        """Write cancelled ticket data to the CSV file."""
+        # Writes the list of cancelled ticket data to the CANCELLED_TICKETS file.
+        # - Converts each cancelled ticket object to a dictionary using `ticket.cancelled_ticket_payload()`.
+
         with open(CANCELLED_TICKETS, mode='w', newline='') as record:
             writer = csv.DictWriter(record, fieldnames=['customer_id', 'fullname', 'ticket_number', 'seat_number', 'booking_time', 'status', 'window_seat', 'cancelled_date'])
             writer.writeheader()
