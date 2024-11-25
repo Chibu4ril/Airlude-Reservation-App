@@ -5,12 +5,12 @@ from ticketconfig import CancelledTicketConfig
 import random
 
 TICKETS_FILE = 'gui_flight_db.csv'
-CANCELLED_TICKETS = "cancelled_tickets.csv"
+CANCELLED_TICKETS = 'deleted_gui_flight_db.csv'
 
 class Ticketing:
     def __init__(self):
         self.all_tickets = self.query_tickets()
-        # self.all_cancelled_tickets = self.query_cancelled_tickets()
+        # self.all_cancelled_tickets = self# .query_cancelled_tickets()
         self.config_ticket = TicketConfig
         self.cancelled_ticket_config = CancelledTicketConfig
         self.counter = len([ticket for ticket in self.all_tickets if ticket.status == 'Active'])

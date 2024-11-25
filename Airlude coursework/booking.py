@@ -56,27 +56,15 @@ class Ticketing:
 
     @classmethod
     def customer_id(cls):
-        count = 0
-        customerId = []
-        while count <= 3:
-            for i in  range(0, 3):
-                random_range = random.randrange(5)
-                customerId.append(i + random_range)
-            break
-        random_num_gen = ''.join(str(item) for item in customerId)
-        return random_num_gen
+        # Generate a unique customer ID.
+        # Create a string of 3 random numbers in the range 0-4
+        return ''.join(str(random.randint(0, 4)) for _ in range(3))
 
     @classmethod
     def booking_id(cls):
-        bookingId = []
-        booking_digit_count = 0
-        while booking_digit_count <= 5:
-            for i in range(0, 5):
-                random_range = random.randrange(5)
-                bookingId.append(i + random_range)
-            break
-        random_booking_gen = ''.join(str(item) for item in bookingId)
-        return random_booking_gen
+        # Generate a unique booking ID.
+        # Create a string of 5 random numbers in the range 0-4
+        return ''.join(str(random.randint(0, 4)) for _ in range(5))
 
     def write_to_csv(self):
         with open(TICKETS_FILE, mode='w', newline='') as record:
@@ -123,7 +111,7 @@ class Ticketing:
         ticket_number = f'{self.customer_id()}-{self.booking_id()}'
         customer_id = self.customer_id()
         seat_number = self.assign_seat_number()
-        window_seat = str(seat_number % 2 == 0)
+        window_seat = str(seat_number % 3 == 1)
         booking_time = self.time
         status = 'Active'.title()
 
@@ -147,11 +135,9 @@ class Ticketing:
         print(f'No ticket found with Ticket Number: {booked_ticket_number}')
 
     def del_tickets(self):
-        booked_ticket_number = input('Enter Your Ticket Number: ')
-        ticket_found = False
+        booked_ticket_number = input('Enter Your Ticket Number: ').strip()
         for row in self.all_tickets:
             if row.ticket_number == booked_ticket_number:
-                ticket_found = True
                 print(f'\nAre you Sure You Want to Cancel This Reservation?\n\nName: {row.fullname} \nTicket Number: {row.ticket_number} \nSeat Number: {row.seat_number}\nTicket Status: {row.status}\nBooking Time: {row.booking_time} ')
                 confirm_del = input('\nType a YES or NO to proceed with reservation cancellation: \n').strip().upper()
                 if confirm_del == 'YES':
@@ -178,10 +164,8 @@ class Ticketing:
                     return
                 else:
                     print('Cancellation aborted.')
-                    return
 
-        if not ticket_found:
-            print(f'\nNo ticket found with this Ticket Number: {booked_ticket_number}')
+        print(f'\nNo ticket found with this Ticket Number: {booked_ticket_number}')
 
 
     def edit_ticket(self):
@@ -223,6 +207,7 @@ class Ticketing:
         booked_seats = [int(ticket.seat_number) for ticket in self.all_tickets if ticket.status == 'Active']
 
         seat_number = 1  # Start seat numbering
+
 
         # Loop through rows
         for row in range(1, (total_seats // seats_per_row) + 2):

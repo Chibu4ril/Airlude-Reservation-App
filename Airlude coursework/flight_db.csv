@@ -1,9 +1,6 @@
 customer_id,fullname,ticket_number,seat_number,booking_time,status,window_seat
-013,Innocent Hope,442-35345,1,21-11-2024 02:24:39,Active,False
-235,Hgahdhagdhd Adnbasdasdsa,436-04244,2,21-11-2024 02:37:14,Active,True
-016,Hdhgfgdshf Nbdnbsbnf,156-34554,3,21-11-2024 02:50:06,Active,False
-013,Hsjdhjhds Ncxbbcxhfn,433-25376,4,21-11-2024 03:01:32,Active,True
-012,Fdffdf Sfdsfdx,316-44235,5,21-11-2024 03:02:54,Active,False
-116,Dassa Dadasdd,254-12436,6,21-11-2024 09:04:47,Active,True
-444,Sfsfsfsfsax Cerfgdfd,235-14235,7,21-11-2024 09:05:44,Active,False
-142,Innocent Losrt,254-24374,8,22-11-2024 22:53:32,Active,True
+243,Fdsdfds Cxccxv,110-00231,1,25-11-2024 11:30:28,Active,True
+020,Cxsfdsffegvfg Dffssd,033-43234,2,25-11-2024 11:30:28,Active,False
+001,Vscvdssgg Scxcvfd,314-01331,3,25-11-2024 11:30:28,Active,False
+423,Vfvdgfdvg Csdsffsf,002-41240,4,25-11-2024 11:30:28,Active,True
+333,Sdfsfd Cxzzxc,342-43440,5,25-11-2024 11:30:28,Active,False
